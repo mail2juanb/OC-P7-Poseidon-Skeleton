@@ -11,4 +11,9 @@ import java.sql.Timestamp;
 @Table(name = "trade")
 public class Trade {
     // TODO: Map columns in data table TRADE with corresponding java fields
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer TradeId;
+
 }
