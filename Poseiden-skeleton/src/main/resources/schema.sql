@@ -1,4 +1,4 @@
---// TODO : supprimer les DROP TABLE pour conserver les données
+--// TODO : At the end - supprimer les DROP TABLE pour conserver les données
 DROP TABLE IF EXISTS BidList;
 DROP TABLE IF EXISTS Trade;
 DROP TABLE IF EXISTS CurvePoint;
@@ -8,8 +8,7 @@ DROP TABLE IF EXISTS Users;
 
 
 CREATE TABLE IF NOT EXISTS BidList (
---  BidListId tinyint(4) NOT NULL AUTO_INCREMENT,
-    BidListId           INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    BidListId           tinyint(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     account             VARCHAR(30) NOT NULL,
     type                VARCHAR(30) NOT NULL,
     bidQuantity         DOUBLE,
