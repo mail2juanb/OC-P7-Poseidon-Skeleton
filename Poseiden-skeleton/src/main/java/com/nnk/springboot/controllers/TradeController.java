@@ -1,6 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.service.CrudService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,12 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-//import javax.validation.Valid;
 import jakarta.validation.Valid;
 
+@RequiredArgsConstructor
 @Controller
 public class TradeController {
-    // TODO: Inject Trade service
+
+    // NOTE: Inject Trade service
+    private CrudService<Trade> service;
 
     @RequestMapping("/trade/list")
     public String home(Model model)
