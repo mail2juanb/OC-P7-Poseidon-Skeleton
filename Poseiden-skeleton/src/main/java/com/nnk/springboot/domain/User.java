@@ -1,26 +1,42 @@
 package com.nnk.springboot.domain;
 
-//import javax.persistence.*;
 import jakarta.persistence.*;
-//import javax.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+
+// TODO : Pour soutenance, Si le username est obligatoire, il faut peut- être ajouter NOTNULL dans le script SQL.
+//  idem pour password, fullname et role.
+
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
+
+    // FIXME :  tinyint(4) : Par défaut signé. Les valeurs sont comprises entre -128 à 127.
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+
     @NotBlank(message = "Username is mandatory")
     private String username;
+
     @NotBlank(message = "Password is mandatory")
     private String password;
+
     @NotBlank(message = "FullName is mandatory")
     private String fullname;
+
     @NotBlank(message = "Role is mandatory")
     private String role;
 
-    public Integer getId() {
+
+    // 250226 - FIX : Replaced by lombok annotations
+/*    public Integer getId() {
         return id;
     }
 
@@ -58,5 +74,5 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
-    }
+    }*/
 }
