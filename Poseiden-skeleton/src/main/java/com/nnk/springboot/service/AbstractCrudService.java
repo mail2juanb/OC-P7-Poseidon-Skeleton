@@ -7,12 +7,19 @@ import com.nnk.springboot.repositories.TradeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> implements CrudService<MODEL> {
     
     protected final JpaRepository<MODEL, Integer> repository;
 
     protected AbstractCrudService(JpaRepository<MODEL, Integer> repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public List<MODEL> getAll() {
+        return repository.findAll();
     }
 
     @Override
