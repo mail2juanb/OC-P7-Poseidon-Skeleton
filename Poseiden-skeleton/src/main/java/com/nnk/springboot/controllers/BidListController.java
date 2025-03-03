@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.service.AbstractCrudService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,15 +15,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //import javax.validation.Valid;
 import jakarta.validation.Valid;
 
+import java.util.List;
 
+@Slf4j
 @Controller
 public class BidListController {
-    // TODO: Inject Bid service
+
+    // NOTE: Inject Bid service
+    private final AbstractCrudService<BidList> service;
+
+    public BidListController(AbstractCrudService<BidList> service) {
+        this.service = service;
+    }
 
     @RequestMapping("/bidList/list")
     public String home(Model model)
     {
         // TODO: call service find all bids to show to the view
+        final List<BidList> bidLists = service.getAll();
+        log.debug("Liste des BidLists récupérés : {}", bidLists);
+        model.addAttribute("bidLists", bidLists);
+
         return "bidList/list";
     }
 

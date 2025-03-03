@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.service.AbstractCrudService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,15 +15,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //import javax.validation.Valid;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
+@Slf4j
 @Controller
 public class RuleNameController {
-    // TODO: Inject RuleName service
+
+    // NOTE: Inject RuleName service
+    private final AbstractCrudService<RuleName> service;
+
+    public RuleNameController(AbstractCrudService<RuleName> service) {
+        this.service = service;
+    }
 
     @RequestMapping("/ruleName/list")
-    public String home(Model model)
-    {
-        // TODO: find all RuleName, add to model
+    public String home(Model model) {
+
+        // NOTE: find all RuleName, add to model
+        final List<RuleName> ruleNames = service.getAll();
+        log.debug("Liste des RuleNames récupérés : {}", ruleNames);
+        model.addAttribute("ruleNames", ruleNames);
+
         return "ruleName/list";
+
     }
 
     @GetMapping("/ruleName/add")

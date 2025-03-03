@@ -39,7 +39,7 @@ public class UserController {
 //        model.addAttribute("users", users);
 
         final List<User> users = service.getAll();
-        log.info("Liste des utilisateurs récupérés : {}", users);
+        log.debug("Liste des utilisateurs récupérés : {}", users);
         model.addAttribute("users", users);
 
         return "user/list";

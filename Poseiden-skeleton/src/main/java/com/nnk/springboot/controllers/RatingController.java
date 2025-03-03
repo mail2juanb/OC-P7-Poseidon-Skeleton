@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.service.AbstractCrudService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,15 +15,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //import javax.validation.Valid;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
+
+@Slf4j
 @Controller
 public class RatingController {
-    // TODO: Inject Rating service
+
+    // NOTE: Inject Rating service
+    private final AbstractCrudService<Rating> service;
+
+    public RatingController(AbstractCrudService<Rating> service) {
+        this.service = service;
+    }
 
     @RequestMapping("/rating/list")
     public String home(Model model)
     {
-        // TODO: find all Rating, add to model
+        // NOTE: find all Rating, add to model
+        final List<Rating> ratings = service.getAll();
+        log.debug("Liste des Rating récupérés : {}", ratings);
+        model.addAttribute("ratings", ratings);
+
         return "rating/list";
+
     }
 
     @GetMapping("/rating/add")
