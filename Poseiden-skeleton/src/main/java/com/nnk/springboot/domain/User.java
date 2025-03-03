@@ -2,9 +2,7 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 // TODO : Pour soutenance, Si le username est obligatoire, il faut peut- être ajouter NOTNULL dans le script SQL.
@@ -13,9 +11,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements DomainModel<User> {
 
     // FIXME :  tinyint(4) : Par défaut signé. Les valeurs sont comprises entre -128 à 127.
     @Id
@@ -35,8 +35,37 @@ public class User {
     private String role;
 
 
-    // 250226 - FIX : Replaced by lombok annotations
-/*    public Integer getId() {
+
+//    public Integer getId(){
+//        return getId();
+//    }
+
+
+
+    public User update(User user){
+        this.id = user.getId();
+
+        return this;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "User{id=" + id + ", username='" + username + "', fullname='" + fullname + "', role='" + role + "'}";
+//    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+
+
+    // FIXME : Pourquoi les annotations ne fonctionnent pas - Replaced by lombok annotations
+    public Integer getId() {
         return id;
     }
 
@@ -74,5 +103,5 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
-    }*/
+    }
 }
