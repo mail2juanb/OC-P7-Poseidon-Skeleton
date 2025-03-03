@@ -13,10 +13,10 @@ import java.sql.Timestamp;
 public class Trade implements DomainModel<Trade> {
     // TODO: Map columns in data table TRADE with corresponding java fields
 
-    // FIXME :  tinyint(4) : Par défaut signé. Les valeurs sont comprises entre -128 à 127.
+    // FIXME :  tinyint(4) : Par défaut signé. Les valeurs sont comprises entre -128 à 127. on ajoute un @Min et @%ax ?
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TradeId")
+    @Column(name = "tradeid", updatable = false)
     private Integer id;
 
     @NotNull
@@ -27,14 +27,19 @@ public class Trade implements DomainModel<Trade> {
     @Column(length = 30, nullable = false)
     private String type;
 
+    @Column(name = "buyquantity")
     private Double buyQuantity;
 
+    @Column(name = "sellquantity")
     private Double sellQuantity;
 
+    @Column(name = "buyprice")
     private Double buyPrice;
 
+    @Column(name = "sellprice")
     private Double sellPrice;
 
+    @Column(name = "tradedate")
     private Timestamp tradeDate;
 
     @Column(length = 125)
@@ -52,24 +57,26 @@ public class Trade implements DomainModel<Trade> {
     @Column(length = 125)
     private String book;
 
-    @Column(length = 125)
+    @Column(name = "creationname", length = 125)
     private String creationName;
 
+    @Column(name = "creationdate")
     private Timestamp creationDate;
 
-    @Column(length = 125)
+    @Column(name = "revisionname", length = 125)
     private String revisionName;
 
+    @Column(name = "revisiondate")
     private Timestamp revisionDate;
 
-    @Column(length = 125)
+    @Column(name = "dealname", length = 125)
     private String dealName;
 
-    @Column(length = 125)
+    @Column(name = "dealtype", length = 125)
     private String dealType;
 
     // FIXME : C'est quoi sourceListId dans une String ?
-    @Column(length = 125)
+    @Column(name = "sourcelistid", length = 125)
     private String sourceListId;
 
     @Column(length = 125)
@@ -77,9 +84,9 @@ public class Trade implements DomainModel<Trade> {
 
 
 
-//    public Integer getId(){
-//        return getId();
-//    }
+    public Integer getId(){
+        return id;
+    }
 
 
     public Trade update(Trade trade){
@@ -89,4 +96,30 @@ public class Trade implements DomainModel<Trade> {
     }
 
 
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", type='" + type + '\'' +
+                ", buyQuantity=" + buyQuantity +
+                ", sellQuantity=" + sellQuantity +
+                ", buyPrice=" + buyPrice +
+                ", sellPrice=" + sellPrice +
+                ", tradeDate=" + tradeDate +
+                ", security='" + security + '\'' +
+                ", status='" + status + '\'' +
+                ", trader='" + trader + '\'' +
+                ", benchmark='" + benchmark + '\'' +
+                ", book='" + book + '\'' +
+                ", creationName='" + creationName + '\'' +
+                ", creationDate=" + creationDate +
+                ", revisionName='" + revisionName + '\'' +
+                ", revisionDate=" + revisionDate +
+                ", dealName='" + dealName + '\'' +
+                ", dealType='" + dealType + '\'' +
+                ", sourceListId='" + sourceListId + '\'' +
+                ", side='" + side + '\'' +
+                '}';
+    }
 }

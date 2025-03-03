@@ -1,8 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.service.CrudService;
+import com.nnk.springboot.service.AbstractCrudService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,17 +14,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
 
-@RequiredArgsConstructor
+import java.util.List;
+
+//@RequiredArgsConstructor
+@Slf4j
 @Controller
 public class TradeController {
 
     // NOTE: Inject Trade service
-    private CrudService<Trade> service;
+    private final AbstractCrudService<Trade> service;
+
+    public TradeController(AbstractCrudService<Trade> service) {
+        this.service = service;
+    }
 
     @RequestMapping("/trade/list")
     public String home(Model model)
     {
         // TODO: find all Trade, add to model
+        final List<Trade> trades = service.getAll();
+        log.info("Liste des Trade récupérés : {}", trades);
+        model.addAttribute("trades", trades);
+
+
         return "trade/list";
     }
 
