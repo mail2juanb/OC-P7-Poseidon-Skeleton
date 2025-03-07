@@ -2,9 +2,6 @@ package com.nnk.springboot.service;
 
 
 import com.nnk.springboot.domain.DomainModel;
-import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.TradeRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -31,25 +28,25 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
     }
 
     @Override
-    public void create( MODEL model){
+    public void create(MODEL model){
         if (model.getId() != null ){
             throw new RuntimeException("Save, not update !!!! ");
         }
-
-
+        log.debug("CREATE = {}", model);
         repository.save(model);
     }
 
     @Override
-    public void update( MODEL model){
+    public void update(MODEL model){
         MODEL updatedModel = getById(model.getId())
                 .update(model);
-        log.debug("MAJ = {}", model);
+        log.debug("UPDATE = {}", model);
         repository.save(updatedModel);
     }
 
     @Override
-    public void delete( Integer id){
+    public void delete(Integer id){
+        log.debug("DELETE = {}", id);
         repository.deleteById(id);
     }
 
