@@ -4,6 +4,6 @@ public interface DomainModel<MODEL> {
 
     Integer getId();
 
-    MODEL update(MODEL update);
+    MODEL update(MODEL model);
 }
 
