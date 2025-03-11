@@ -32,6 +32,13 @@ public class TradeController {
 
     // TODO : Ajouter la documentation Javadoc
 
+    // TODO : Remplacer l'annotation RequestMapping par un GetMapping. La request est à mettre au niveau
+    //  de la classe afin de définir un emplacement spécifique @RequestMapping("/trade"). Puis les autres méthodes
+    //  doivent être corrigées et retirer le /trade/.
+
+    // TODO : Implémenter un générateur / une méthode pour éviter de répéter du log error
+
+
     @RequestMapping("/trade/list")
     public String home(Model model)
     {
@@ -119,4 +126,5 @@ public class TradeController {
 
         return "redirect:/trade/list";
     }
+
 }

@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 
 import com.nnk.springboot.domain.DomainModel;
+import com.nnk.springboot.exception.NotFoundIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -24,21 +25,20 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
     @Override
     public MODEL getById(Integer id){
         return repository.findById(id)
-                // TODO : Ajouter ici une NotFoundException plutot
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundIdException("id not found with : " + id));
     }
 
     @Override
     public void create(MODEL model){
-        if (model.getId() != null ){
-            // TODO: Ecrire une levée d'erreur plus précise dans son message. cette méthode est utilisé par toutes les tables
-            throw new RuntimeException("Save, not update !!!! ");
+        Integer modelId = model.getId();
+        if (modelId != null ){
+            throw new NotFoundIdException("You can't create with a " + model.getClass().getSimpleName() + "'s id set to " + modelId);
         }
         log.debug("CREATE = {}", model);
         repository.save(model);
     }
 
-    // TODO: Vérifier ce qu'il se passe lorsque l'ID n'est ps trouvé et donc = null
+    // TODO: Vérifier ce qu'il se passe lorsque l'ID n'est ps trouvé et donc = null --> Tests unitaires
     @Override
     public void update(MODEL model){
         MODEL updatedModel = getById(model.getId())
@@ -49,7 +49,9 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
 
     @Override
     public void delete(Integer id){
-        // TODO: Vérifier que l'id existe et si elle n'existe pas, donc null, alors levée d'exception
+        if (!repository.existsById(id)) {
+            throw new NotFoundIdException("This id doesn't exist : " + id);
+        }
         log.debug("DELETE = {}", id);
         repository.deleteById(id);
     }
