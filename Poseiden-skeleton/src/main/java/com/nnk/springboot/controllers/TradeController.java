@@ -19,43 +19,36 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Controller
+@RequestMapping("/trade")
 public class TradeController {
 
-    // NOTE: Inject Trade service
-    //private final AbstractCrudService<Trade> service;
+
     private final CrudService<Trade> service;
 
-    // NOTE : L'annotation @RequiredArgsConstructor remplace le constructeur
-//    public TradeController(AbstractCrudService<Trade> service) {
-//        this.service = service;
-//    }
 
     // TODO : Ajouter la documentation Javadoc
 
-    // TODO : Remplacer l'annotation RequestMapping par un GetMapping. La request est à mettre au niveau
-    //  de la classe afin de définir un emplacement spécifique @RequestMapping("/trade"). Puis les autres méthodes
-    //  doivent être corrigées et retirer le /trade/.
-
-    // TODO : Implémenter un générateur / une méthode pour éviter de répéter du log error
 
 
-    @RequestMapping("/trade/list")
-    public String home(Model model)
-    {
-        // NOTE: find all Trade, add to model
+    @GetMapping("/list")
+    public String home(Model model) {
+
         final List<Trade> trades = service.getAll();
-        log.info("Liste des Trade récupérés : {}", trades);
+        log.debug("List of Trade found : {}", trades);
         model.addAttribute("trades", trades);
 
         return "trade/list";
+
     }
 
-    @GetMapping("/trade/add")
+
+    @GetMapping("/add")
     public String addTrade(Trade trade) {
         return "trade/add";
     }
 
-    @PostMapping("/trade/validate")
+
+    @PostMapping("/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
 
         // NOTE: check data valid and save to db, after saving return Trade list
@@ -67,34 +60,36 @@ public class TradeController {
         log.debug("Trade type = {}", trade.getType());
         log.debug("Trade Buy Quantity = {}", trade.getBuyQuantity());
 
-        if (result.hasErrors()) {
-            log.error("Validation errors found on {} : {}", getClass().getSimpleName() , result.getAllErrors());
-            model.addAttribute("trade", trade);
+        if (hasValidationErrors(trade, result, model)) {
             return "trade/add";
         }
 
-        try {
-            service.create(trade);
-        } catch (Exception exception){
-            log.error("Service error in {} during updateTrade : {}", exception.getClass().getSimpleName(), exception.getMessage());
-            return "trade/add";
-        }
+        // Try catch supprimé car attrapé par le GlobalExceptionHandler
+//        try {
+//            service.create(trade);
+//        } catch (Exception exception){
+//            log.error("Service error in {} during updateTrade : {}", exception.getClass().getSimpleName(), exception.getMessage());
+//            return "trade/add";
+//        }
+        service.create(trade);
 
         return "redirect:/trade/list";
     }
 
-    @GetMapping("/trade/update/{id}")
+
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
-        // NOTE: get Trade by id and to model then show to the form
         final Trade trade = service.getById(id);
-        log.debug("Trade ayant l'id {} = {}", id, trade);
+        log.debug("Trade with id {} = {}", id, trade);
         model.addAttribute("trade", trade);
 
         return "trade/update";
+
     }
 
-    @PostMapping("/trade/update/{id}")
+
+    @PostMapping("/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result, Model model) {
 
@@ -103,28 +98,49 @@ public class TradeController {
         // Check Type               = @NotBlank
         // Check Buy Quantity       =
 
-        if (result.hasErrors()) {
-            log.error("Validation errors found on {} : {}", getClass().getSimpleName() , result.getAllErrors());
-            model.addAttribute("trade", trade);
+        if (hasValidationErrors(trade, result, model)) {
             return "trade/update";
         }
 
-        try {
-            service.update(trade);
-        } catch (Exception exception){
-            log.error("Service error in {} during updateTrade : {}", exception.getClass().getSimpleName(), exception.getMessage());
-            return "trade/update";
-        }
+        // Try catch supprimé car attrapé par le GlobalExceptionHandler
+//        try {
+//            service.update(trade);
+//        } catch (Exception exception){
+//            log.error("Service error in {} during updateTrade : {}", exception.getClass().getSimpleName(), exception.getMessage());
+//            return "trade/update";
+//        }
+        service.update(trade);
+
+
+        log.debug("Update Trade with id {} = {}", id, trade);
         return "redirect:/trade/list";
+
     }
 
-    @GetMapping("/trade/delete/{id}")
+
+    @GetMapping("/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
 
-        // NOTE: Find Trade by id and delete the Trade, return to Trade list
+        log.info("Delete Trade with id {}", id);
         service.delete(id);
 
         return "redirect:/trade/list";
+
     }
+
+
+
+    private boolean hasValidationErrors(Trade trade, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
+            model.addAttribute("trade", trade);
+            return true;
+        }
+
+        return false;
+
+    }
+
 
 }
