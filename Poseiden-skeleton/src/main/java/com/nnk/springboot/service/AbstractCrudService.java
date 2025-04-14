@@ -38,7 +38,8 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
         repository.save(model);
     }
 
-    // TODO: Vérifier ce qu'il se passe lorsque l'ID n'est ps trouvé et donc = null --> Tests unitaires
+    // NOTE: Vérifier ce qu'il se passe lorsque l'ID n'est ps trouvé et donc = null --> Tests unitaires
+    //       Il se passe que l'exception idNotFound est levée
     @Override
     public void update(MODEL model){
         MODEL updatedModel = getById(model.getId())
