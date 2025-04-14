@@ -1,9 +1,7 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.TradeRepository;
-import com.nnk.springboot.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.nnk.springboot.repository.TradeRepository;
 import org.springframework.stereotype.Service;
 
 @Service

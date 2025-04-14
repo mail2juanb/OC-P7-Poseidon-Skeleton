@@ -2,7 +2,7 @@ package com.nnk.springboot.service;
 
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.repository.RatingRepository;
 import org.springframework.stereotype.Service;
 
 @Service

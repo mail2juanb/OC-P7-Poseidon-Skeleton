@@ -2,7 +2,7 @@ package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.exception.NotFoundIdException;
-import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.repository.TradeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

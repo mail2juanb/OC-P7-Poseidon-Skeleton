@@ -1,7 +1,7 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.repositories.RuleNameRepository;
+import com.nnk.springboot.repository.RuleNameRepository;
 import org.springframework.stereotype.Service;
 
 

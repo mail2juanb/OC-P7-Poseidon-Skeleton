@@ -2,7 +2,7 @@ package com.nnk.springboot.service;
 
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.repository.BidListRepository;
 import org.springframework.stereotype.Service;
 
 @Service
