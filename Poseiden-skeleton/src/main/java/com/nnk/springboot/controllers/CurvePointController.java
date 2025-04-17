@@ -2,6 +2,8 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.service.CrudService;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -53,9 +55,11 @@ public class CurvePointController {
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
 
         // NOTE: check data valid and save to db, after saving return Curve list
-        // Check Term               = @NotNull
-        // Check Value              = @NotNull
+        // Check CurveId            = @Min -128 / @Max 127 / @NotNull
+        // Check Term               = none
+        // Check Value              = none
 
+        log.debug("CurvePoint curveId = {}", curvePoint.getCurveId());
         log.debug("CurvePoint term = {}", curvePoint.getTerm());
         log.debug("CurvePoint value = {}", curvePoint.getValue());
 
@@ -89,8 +93,9 @@ public class CurvePointController {
                              BindingResult result, Model model) {
 
         // NOTE: check required fields, if valid call service to update Curve and return Curve list
-        // Check Term               = @NotNull
-        // Check Value              = @NotNull
+        // Check CurveId            = @Min -128 / @Max 127 / @NotNull
+        // Check Term               = none
+        // Check Value              = none
 
         if (hasValidationErrors(curvePoint, result, model)) {
             return "curvePoint/update";

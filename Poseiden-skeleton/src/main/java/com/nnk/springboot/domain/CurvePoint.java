@@ -25,18 +25,17 @@ public class CurvePoint implements DomainModel<CurvePoint> {
     private Integer id;
 
     // FIXME :  tinyint : Par défaut signé. Les valeurs sont comprises entre -128 à 127.
-    @Min(-128)
-    @Max(127)
+    @Min(value = -128, message = "curveId must be greater than or equal to -128")
+    @Max(value = 127, message = "curveId must be less than or equal to 127")
+    @NotNull(message = "CurveId can't be null")
     @Column(name = "curveid", columnDefinition = "TINYINT")
     private Integer curveId = 0;
 
     @Column(name = "asofdate")
     private Timestamp asOfDate = new Timestamp(System.currentTimeMillis());
 
-    @NotNull(message = "Term can't be null")
     private Double term = 0.0;
 
-    @NotNull(message = "Value can't be null")
     private Double value = 0.0;
 
     @Column(name = "creationdate")
@@ -47,6 +46,7 @@ public class CurvePoint implements DomainModel<CurvePoint> {
     @Override
     public CurvePoint update(CurvePoint curvePoint){
         this.id = curvePoint.getId();
+        this.curveId = curvePoint.getCurveId();
         this.term = curvePoint.getTerm();
         this.value = curvePoint.getValue();
 
