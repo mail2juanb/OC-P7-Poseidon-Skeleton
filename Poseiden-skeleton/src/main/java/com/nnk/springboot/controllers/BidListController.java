@@ -1,8 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.service.AbstractCrudService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,60 +12,124 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-//import javax.validation.Valid;
 import jakarta.validation.Valid;
 
 import java.util.List;
 
+
+// TODO : Ajouter la documentation Javadoc
+
+@RequiredArgsConstructor
 @Slf4j
 @Controller
+@RequestMapping("/bidList")
 public class BidListController {
 
-    // NOTE: Inject Bid service
     private final AbstractCrudService<BidList> service;
 
-    public BidListController(AbstractCrudService<BidList> service) {
-        this.service = service;
-    }
 
-    @RequestMapping("/bidList/list")
-    public String home(Model model)
-    {
-        // TODO: call service find all bids to show to the view
+    @RequestMapping("/list")
+    public String home(Model model) {
+
         final List<BidList> bidLists = service.getAll();
-        log.debug("Liste des BidLists récupérés : {}", bidLists);
+        log.debug("List of BidList found : {}", bidLists);
         model.addAttribute("bidLists", bidLists);
 
         return "bidList/list";
+
     }
 
-    @GetMapping("/bidList/add")
+
+
+    @GetMapping("/add")
     public String addBidForm(BidList bid) {
         return "bidList/add";
     }
 
-    @PostMapping("/bidList/validate")
+
+
+    @PostMapping("/validate")
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return bid list
-        return "bidList/add";
+
+        // NOTE: check data valid and save to db, after saving return bid list
+        // Check Account            = @NotBlank
+        // Check Type               = @NotBlank
+        // Check Buy Quantity       =
+
+        log.debug("BidList account = {}", bid.getAccount());
+        log.debug("BidList type = {}", bid.getType());
+        log.debug("BidList Bid Quantity = {}", bid.getBidQuantity());
+
+        if (hasValidationErrors(bid, result, model)) {
+            return "bidList/add";
+        }
+
+        service.create(bid);
+
+        return "redirect:/bidList/list";
+
     }
 
-    @GetMapping("/bidList/update/{id}")
+
+
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
+
+        // NOTE: get Bid by Id and to model then show to the form
+        final BidList bidList = service.getById(id);
+        log.debug("BidList with id {} = {}", id, bidList);
+        model.addAttribute("bidList", bidList);
+
         return "bidList/update";
+
     }
 
-    @PostMapping("/bidList/update/{id}")
+
+
+    @PostMapping("/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                              BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
+
+        // NOTE: check required fields, if valid call service to update Bid and return list Bid
+        // Check Account            = @NotBlank
+        // Check Type               = @NotBlank
+        // Check Bid Quantity       = none
+
+        if (hasValidationErrors(bidList, result, model)) {
+            return "bidList/update";
+        }
+
+        service.update(bidList);
+        log.debug("Update BidList with id {} = {}", id, bidList);
         return "redirect:/bidList/list";
+
     }
 
-    @GetMapping("/bidList/delete/{id}")
+
+
+    @GetMapping("/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Bid by Id and delete the bid, return to Bid list
+
+        // NOTE: Find Bid by Id and delete the bid, return to Bid list
+        log.info("Delete bidList with id {}", id);
+        service.delete(id);
+
         return "redirect:/bidList/list";
+
     }
+
+
+
+    private boolean hasValidationErrors(BidList bidList, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
+            model.addAttribute("bidList", bidList);
+            return true;
+        }
+
+        return false;
+
+    }
+
 }

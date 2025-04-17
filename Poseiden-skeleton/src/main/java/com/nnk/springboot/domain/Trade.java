@@ -13,9 +13,11 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "trade")
 public class Trade implements DomainModel<Trade> {
-    // NOTE: Map columns in data table TRADE with corresponding java fields
 
-    // FIXME :  tinyint(4) : Par défaut signé. Les valeurs sont comprises entre -128 à 127. on ajoute un @Min et @Max ?
+    // NOTE: tinyint(4) est signé par défaut, avec une plage de -128 à 127.
+    //        Pas besoin de @Min/@Max tant que la valeur est générée automatiquement par la DB (@GeneratedValue).
+    //        À envisager uniquement si l'id devient modifiable côté client.
+    // FIXME : Oui mais que faire si la DB n'accepte pas au dela de 128, a cause du tinyint
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tradeid", updatable = false)
@@ -28,7 +30,6 @@ public class Trade implements DomainModel<Trade> {
     @NotBlank(message = "Type can't be null nor blank")
     @Column(length = 30, nullable = false)
     private String type;
-
 
     @Column(name = "buyquantity")
     private Double buyQuantity = 0.0;
@@ -78,7 +79,6 @@ public class Trade implements DomainModel<Trade> {
     @Column(name = "dealtype", length = 125)
     private String dealType = "";
 
-    // FIXME : C'est quoi sourceListId dans une String ?
     @Column(name = "sourcelistid", length = 125)
     private String sourceListId = "";
 

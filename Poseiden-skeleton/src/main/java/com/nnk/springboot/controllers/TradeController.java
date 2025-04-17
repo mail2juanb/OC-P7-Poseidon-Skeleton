@@ -16,18 +16,16 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 
+
+// TODO : Ajouter la documentation Javadoc
+
 @RequiredArgsConstructor
 @Slf4j
 @Controller
 @RequestMapping("/trade")
 public class TradeController {
 
-
     private final CrudService<Trade> service;
-
-
-    // TODO : Ajouter la documentation Javadoc
-
 
 
     @GetMapping("/list")
@@ -96,7 +94,7 @@ public class TradeController {
         // NOTE: check required fields, if valid call service to update Trade and return Trade list
         // Check Account            = @NotBlank
         // Check Type               = @NotBlank
-        // Check Buy Quantity       =
+        // Check Buy Quantity       = none
 
         if (hasValidationErrors(trade, result, model)) {
             return "trade/update";
@@ -110,8 +108,6 @@ public class TradeController {
 //            return "trade/update";
 //        }
         service.update(trade);
-
-
         log.debug("Update Trade with id {} = {}", id, trade);
         return "redirect:/trade/list";
 
@@ -141,6 +137,5 @@ public class TradeController {
         return false;
 
     }
-
 
 }
