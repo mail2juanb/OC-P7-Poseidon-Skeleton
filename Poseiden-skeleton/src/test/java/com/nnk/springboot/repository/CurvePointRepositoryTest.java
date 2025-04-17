@@ -29,6 +29,7 @@ public class CurvePointRepositoryTest {
 
     @BeforeEach
     public void setUp () {
+        curvePoint.setCurveId(2);
         curvePoint.setTerm(12.2);
         curvePoint.setValue(24.4);
         curvePointRepository.save(curvePoint);
@@ -57,6 +58,7 @@ public class CurvePointRepositoryTest {
         // Given a CurvePoint -- by setUp()
 
         // Given fields to update
+        curvePoint.setCurveId(12);
         curvePoint.setTerm(99.9);
         curvePoint.setValue(0.);
 
@@ -64,6 +66,7 @@ public class CurvePointRepositoryTest {
         CurvePoint response = curvePointRepository.save(curvePoint);
 
         // Then CurvePoint is updated
+        assertEquals(12, response.getCurveId());
         assertEquals(99.9, response.getTerm());
         assertEquals(0., response.getValue());
 
@@ -97,6 +100,7 @@ public class CurvePointRepositoryTest {
         Optional<CurvePoint> response = curvePointRepository.findById(curvePointId);
 
         // Then return the CurvePoint
+        assertEquals(curvePoint.getCurveId(), response.get().getCurveId());
         assertEquals(curvePoint.getTerm(), response.get().getTerm());
         assertEquals(curvePoint.getValue(), response.get().getValue());
 
