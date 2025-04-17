@@ -28,6 +28,7 @@ public class TradeController {
     private final CrudService<Trade> service;
 
 
+
     @GetMapping("/list")
     public String home(Model model) {
 
@@ -40,10 +41,12 @@ public class TradeController {
     }
 
 
+
     @GetMapping("/add")
     public String addTrade(Trade trade) {
         return "trade/add";
     }
+
 
 
     @PostMapping("/validate")

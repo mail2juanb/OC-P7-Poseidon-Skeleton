@@ -3,115 +3,54 @@ package com.nnk.springboot.domain;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
+import lombok.extern.slf4j.Slf4j;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 
-//@Getter
-//@Setter
-//@AllArgsConstructor
+
+@Slf4j
 @Data
 @Entity
 @Table(name = "curvepoint")
 public class CurvePoint implements DomainModel<CurvePoint> {
 
-    // TODO: Map columns in data table CURVEPOINT with corresponding java fields
-
-    // FIXME :  tinyint(4) : Par défaut signé. Les valeurs sont comprises entre -128 à 127.
+    // NOTE: tinyint(4) est signé par défaut, avec une plage de -128 à 127.
+    //        Pas besoin de @Min/@Max tant que la valeur est générée automatiquement par la DB (@GeneratedValue).
+    //        À envisager uniquement si l'id devient modifiable côté client.
+    // FIXME : Oui mais que faire si la DB n'accepte pas au dela de 128, a cause du tinyint
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
     private Integer id;
 
     // FIXME :  tinyint : Par défaut signé. Les valeurs sont comprises entre -128 à 127.
     @Min(-128)
     @Max(127)
     @Column(name = "curveid", columnDefinition = "TINYINT")
-    private Integer curveId;
+    private Integer curveId = 0;
 
     @Column(name = "asofdate")
-    private Timestamp asOfDate;
+    private Timestamp asOfDate = new Timestamp(System.currentTimeMillis());
 
-    private Double term;
+    @NotNull(message = "Term can't be null")
+    private Double term = 0.0;
 
-    private Double value;
+    @NotNull(message = "Value can't be null")
+    private Double value = 0.0;
 
     @Column(name = "creationdate")
-    private Timestamp creationDate;
+    private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
 
 
 
     @Override
     public CurvePoint update(CurvePoint curvePoint){
         this.id = curvePoint.getId();
+        this.term = curvePoint.getTerm();
+        this.value = curvePoint.getValue();
 
         return this;
-    }
-
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public @Min(-128) @Max(127) Integer getCurveId() {
-        return curveId;
-    }
-
-    public void setCurveId(@Min(-128) @Max(127) Integer curveId) {
-        this.curveId = curveId;
-    }
-
-    public Timestamp getAsOfDate() {
-        return asOfDate;
-    }
-
-    public void setAsOfDate(Timestamp asOfDate) {
-        this.asOfDate = asOfDate;
-    }
-
-    public Double getTerm() {
-        return term;
-    }
-
-    public void setTerm(Double term) {
-        this.term = term;
-    }
-
-    public Double getValue() {
-        return value;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public Timestamp getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Timestamp creationDate) {
-        this.creationDate = creationDate;
-    }
-
-
-    @Override
-    public String toString() {
-        return "CurvePoint{" +
-                "id=" + id +
-                ", curveId=" + curveId +
-                ", asOfDate=" + asOfDate +
-                ", term=" + term +
-                ", value=" + value +
-                ", creationDate=" + creationDate +
-                '}';
     }
 
 }
