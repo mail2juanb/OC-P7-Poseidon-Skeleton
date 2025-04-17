@@ -1,8 +1,7 @@
-package com.nnk.springboot.repositories;
+package com.nnk.springboot.repository;
 
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repository.TradeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
