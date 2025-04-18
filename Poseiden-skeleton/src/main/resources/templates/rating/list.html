@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <title>Home</title>
-    <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container">
     <div class="row">
         <div class="col-6">
-            <a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
-            <a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
-            <a href="/rating/list">Ratings</a>&nbsp;|&nbsp;
-            <a href="/trade/list">Trade</a>&nbsp;|&nbsp;
-            <a href="/ruleName/list">Rule</a>
+            <a th:href="@{/bidList/list}">Bid List</a>&nbsp;|&nbsp;
+            <a th:href="@{/curvePoint/list}">Curve Points</a>&nbsp;|&nbsp;
+            <a th:href="@{/rating/list}">Ratings</a>&nbsp;|&nbsp;
+            <a th:href="@{/trade/list}">Trade</a>&nbsp;|&nbsp;
+            <a th:href="@{/ruleName/list}">Rule</a>
         </div>
         <div class="col-6 text-right">
 
@@ -28,7 +28,7 @@
     </div>
     <div class="row"><h2>Rating List</h2></div>
     <div class="row">
-        <a href="/rating/add" class="btn btn-primary btn-sm">Add New</a>
+        <a th:href="@{/rating/add}" class="btn btn-primary btn-sm">Add New</a>
         <table class="table table-bordered">
             <thead>
             <tr>

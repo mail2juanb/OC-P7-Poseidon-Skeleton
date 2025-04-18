@@ -43,7 +43,7 @@ public class TradeController {
 
 
     @GetMapping("/add")
-    public String addTrade(Trade trade) {
+    public String addTradeForm(Trade trade) {
         return "trade/add";
     }
 
