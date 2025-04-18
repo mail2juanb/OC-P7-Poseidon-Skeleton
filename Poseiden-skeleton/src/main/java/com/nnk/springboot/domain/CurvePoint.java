@@ -28,7 +28,7 @@ public class CurvePoint implements DomainModel<CurvePoint> {
     @Min(value = -128, message = "curveId must be greater than or equal to -128")
     @Max(value = 127, message = "curveId must be less than or equal to 127")
     @NotNull(message = "CurveId can't be null")
-    @Column(name = "curveid", columnDefinition = "TINYINT")
+    @Column(name = "curveid", nullable = false, columnDefinition = "TINYINT")
     private Integer curveId = 0;
 
     @Column(name = "asofdate")

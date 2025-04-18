@@ -52,8 +52,8 @@ public class BidListController {
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
 
         // NOTE: check data valid and save to db, after saving return bid list
-        // Check Account            = @NotBlank
-        // Check Type               = @NotBlank
+        // Check Account            = @NotBlank / @Size(max = 30)
+        // Check Type               = @NotBlank / @Size(max = 30)
         // Check Buy Quantity       =
 
         log.debug("BidList account = {}", bid.getAccount());
@@ -91,8 +91,8 @@ public class BidListController {
                              BindingResult result, Model model) {
 
         // NOTE: check required fields, if valid call service to update Bid and return list Bid
-        // Check Account            = @NotBlank
-        // Check Type               = @NotBlank
+        // Check Account            = @NotBlank / @Size(max = 30)
+        // Check Type               = @NotBlank / @Size(max = 30)
         // Check Bid Quantity       = none
 
         if (hasValidationErrors(bidList, result, model)) {

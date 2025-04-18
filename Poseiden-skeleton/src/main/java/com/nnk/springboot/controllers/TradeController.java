@@ -53,8 +53,8 @@ public class TradeController {
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
 
         // NOTE: check data valid and save to db, after saving return Trade list
-        // Check Account            = @NotBlank
-        // Check Type               = @NotBlank
+        // Check Account            = @NotBlank / @Size(max = 30)
+        // Check Type               = @NotBlank / @Size(max = 30)
         // Check Buy Quantity       =
 
         log.debug("Trade account = {}", trade.getAccount());
@@ -95,8 +95,8 @@ public class TradeController {
                              BindingResult result, Model model) {
 
         // NOTE: check required fields, if valid call service to update Trade and return Trade list
-        // Check Account            = @NotBlank
-        // Check Type               = @NotBlank
+        // Check Account            = @NotBlank / @Size(max = 30)
+        // Check Type               = @NotBlank / @Size(max = 30)
         // Check Buy Quantity       = none
 
         if (hasValidationErrors(trade, result, model)) {
