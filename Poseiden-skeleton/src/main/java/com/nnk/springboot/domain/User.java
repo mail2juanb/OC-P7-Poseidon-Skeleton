@@ -18,7 +18,7 @@ public class User implements DomainModel<User> {
     //        À envisager uniquement si l'id devient modifiable côté client.
     // FIXME : Oui mais que faire si la DB n'accepte pas au dela de 128, a cause du tinyint
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(updatable = false)
     private Integer id;
 

@@ -1,6 +1,6 @@
 insert into Users(fullname, username, password, role) values
     ('Administrator', 'admin', '$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa', 'ADMIN'),
-    ('User', 'user', '$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa', 'USER'),
+    ('user', 'user', '$2a$10$X5eEon.VJnN1S8nggslRgeHLR.oNfQRvMm4TY/ENhbJbBmJ/Jf6Y.', 'USER'),
     ('Moi', 'moi', '', 'USER');
 
 insert into Trade(account, type, buyquantity, sellquantity, buyprice, sellprice, tradedate, security, status, trader, benchmark, book, creationname, creationdate, revisionname, revisiondate, dealname, dealtype, sourcelistid, side) values

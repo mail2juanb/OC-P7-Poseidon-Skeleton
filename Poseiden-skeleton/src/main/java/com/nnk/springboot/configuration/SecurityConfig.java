@@ -24,7 +24,7 @@ public class SecurityConfig {
     }
 
     //private static final String[] PERMIT_ALL = {"/css/**", "/login"};
-    private static final String[] PERMIT_ALL = {"/css/*", "/**", "user/**", "trade/**"};
+    private static final String[] PERMIT_ALL = {"/css/*", "/"};
 
 
     @Bean
@@ -37,17 +37,9 @@ public class SecurityConfig {
                         .requestMatchers(PERMIT_ALL).permitAll()
                         .anyRequest().authenticated()
                 )
-                // TODO : Continuer ici
-
                 .userDetailsService(customUserDetailsService)
-
-                //FIXME: Pas dit que ce soit utile si le formulaire
                 .formLogin(form -> form
-//                        .loginPage("login")
-//                        .usernameParameter("username")
-//                        .passwordParameter("password")
-//                        .defaultSuccessUrl("/transfert")        // TODO : A modifier
-//                        .failureUrl("/login?error=true")        // TODO : A modifier
+                        .defaultSuccessUrl("/bidList/list")
                         .permitAll()
                 )
 
