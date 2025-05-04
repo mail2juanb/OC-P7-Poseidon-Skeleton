@@ -5,6 +5,8 @@ import com.nnk.springboot.repository.UserRepository;
 import com.nnk.springboot.service.AbstractCrudService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -46,19 +49,37 @@ public class UserController {
     }
 
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(User user) {
+        user.setRole("USER"); // Valeur par défaut
+        log.debug("GET PAGE USER/ADD VIEW");
         return "user/add";
     }
 
     @PostMapping("/user/validate")
-    public String validate(@Valid User user, BindingResult result, Model model) {
+    public String validate(@Valid User user, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (!result.hasErrors()) {
+            // Vérifie si l'utilisateur est connecté
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser");
+            log.debug("isAuthenticated = {}", isAuthenticated);
+
+            // Empêche de forcer un rôle autre que USER si non authentifié
+            if (!isAuthenticated) {
+                user.setRole("USER");
+            }
+
+            // Hash du mot de passe
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
+
             userRepository.save(user);
-            model.addAttribute("users", userRepository.findAll());
-            return "redirect:/user/list";
+
+            // Message de succès à afficher après la redirection
+            redirectAttributes.addFlashAttribute("message", "User successfully added.");
+
+            return isAuthenticated ? "redirect:/user/list" : "redirect:/home";
         }
+
         return "user/add";
     }
 

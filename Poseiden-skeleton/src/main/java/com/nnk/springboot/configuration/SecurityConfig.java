@@ -4,7 +4,6 @@ package com.nnk.springboot.configuration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,14 +22,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    //private static final String[] PERMIT_ALL = {"/css/**", "/login"};
-    private static final String[] PERMIT_ALL = {"/css/*", "/"};
+    // Original -- private static final String[] PERMIT_ALL = {"/css/**", "/login"};
+    private static final String[] PERMIT_ALL = {"/css/**", "/**"};                                        // NOTE: Work accept all
+    //private static final String[] PERMIT_ALL = {"/css/**", "/", "/home", "/user/add"};                               // NOTE: Work accept only
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                //.csrf(csrf -> csrf.ignoringRequestMatchers("/css/**", "/login"))
                 .csrf(csrf -> csrf.ignoringRequestMatchers(PERMIT_ALL))
 
                 .authorizeHttpRequests(authorize -> authorize
@@ -39,17 +38,18 @@ public class SecurityConfig {
                 )
                 .userDetailsService(customUserDetailsService)
                 .formLogin(form -> form
+                        .loginPage("/login")
                         .defaultSuccessUrl("/bidList/list")
                         .permitAll()
                 )
 
-//                .logout(logout -> logout
+                .logout(logout -> logout
 //                        .logoutUrl("/logout")
 //                        .logoutSuccessUrl("/login?logout=true")
 //                        .deleteCookies("JSESSIONID")
 //                        .invalidateHttpSession(true)
-//                        .permitAll()
-//                )
+                        .permitAll()
+                )
 //                .exceptionHandling(Customizer.withDefaults()
 //                )
 //                .sessionManagement(session -> session

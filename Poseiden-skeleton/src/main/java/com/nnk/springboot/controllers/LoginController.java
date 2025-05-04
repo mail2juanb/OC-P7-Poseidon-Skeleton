@@ -1,9 +1,11 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,13 +18,24 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("login")
-    public ModelAndView login() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("login");
-        return mav;
+//    @GetMapping("login")
+//    public ModelAndView login() {
+//        ModelAndView mav = new ModelAndView();
+//        mav.setViewName("login");
+//        log.debug("COUCOUC ON EST LAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
+//        return mav;
+//    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("user", new User());
+        log.debug("GET PAGE LOGIN VIEW");
+        return "login";
     }
 
+    // NOTE : PostMapping is managed by Spring Security in SecurityConfig
+
+    // TODO : A implémenter correctement. Je ne sais pas encore où
     @GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {
         ModelAndView mav = new ModelAndView();
@@ -31,6 +44,7 @@ public class LoginController {
         return mav;
     }
 
+    // TODO : Utilisé pour gérer le cas d'un utilisateur qui voudrait aller sur une page dont il n'a pas accès
     @GetMapping("error")
     public ModelAndView error() {
         ModelAndView mav = new ModelAndView();

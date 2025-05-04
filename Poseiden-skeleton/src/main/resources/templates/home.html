@@ -3,17 +3,18 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
-    <title> Spring Boot </title>
+    <title> Home </title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
-<h3> HOME PAGE </h3>
-<p>
-    <a href="/login">Login</a> or create one <a href="/user/list">User management</a>
+    <h3> HOME PAGE </h3>
 
-    <!--    TODO : Ceci est ajout de code car pas encore de sécurité en place-->
-    or go to <a href="/trade/list">Trade management</a>
-
-</p>
+    <!-- Flash message to inform the user that the account has been created.-->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <p th:text="${message}"></p>
+    </div>
+    <p>
+        <a th:href="@{/login}">Login</a> or create one <a th:href="@{/user/add}">Create User</a>
+    </p>
 </body>
 </html>
