@@ -23,8 +23,8 @@ public class SecurityConfig {
     }
 
     // Original -- private static final String[] PERMIT_ALL = {"/css/**", "/login"};
-    private static final String[] PERMIT_ALL = {"/css/**", "/**"};                                        // NOTE: Work accept all
-    //private static final String[] PERMIT_ALL = {"/css/**", "/", "/home", "/user/add"};                               // NOTE: Work accept only
+    //private static final String[] PERMIT_ALL = {"/css/**", "/**"};                                        // NOTE: Work accept all
+    private static final String[] PERMIT_ALL = {"/css/**", "/", "/home", "/403", "/user/add", "/user/validate"};                               // NOTE: Work accept only
 
 
     @Bean
@@ -34,27 +34,30 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PERMIT_ALL).permitAll()
+                        .requestMatchers("/user/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(customUserDetailsService)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/bidList/list")
+                        .failureUrl("/home?error")  // <- redirection en cas d’échec
                         .permitAll()
                 )
 
                 .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout=true")
-//                        .deleteCookies("JSESSIONID")
-//                        .invalidateHttpSession(true)
+                        .logoutUrl("/logout")                       // <- personnalisée ici
+                        .logoutSuccessUrl("/home?logout")          // <- redirection après logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-//                .exceptionHandling(Customizer.withDefaults()
-//                )
-//                .sessionManagement(session -> session
-//                        .maximumSessions(1)
-//                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/403") // Redirection vers page 403 personnalisée
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                )
                 .build();
     }
 

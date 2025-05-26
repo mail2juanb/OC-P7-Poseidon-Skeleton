@@ -5,6 +5,7 @@ import com.nnk.springboot.repository.UserRepository;
 import com.nnk.springboot.service.AbstractCrudService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,6 +36,7 @@ public class UserController {
         this.service = service;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping("/user/list")
     public String home(Model model)
     {

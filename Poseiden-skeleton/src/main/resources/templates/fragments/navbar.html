@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head></head>
+<body>
+
+    <!-- Fragment principal -->
+    <div th:fragment="navbar">
+        <div class="row">
+            <div th:replace="~{fragments/navbar :: nav-left}"></div>
+            <div th:replace="~{fragments/navbar :: nav-right}"></div>
+        </div>
+    </div>
+
+    <!-- Sous-fragment : navigation gauche -->
+    <div th:fragment="nav-left" class="col-6">
+        <a th:href="@{/bidList/list}">Bid List</a>&nbsp;|&nbsp;
+        <a th:href="@{/curvePoint/list}">Curve Points</a>&nbsp;|&nbsp;
+        <a th:href="@{/rating/list}">Ratings</a>&nbsp;|&nbsp;
+        <a th:href="@{/trade/list}">Trade</a>&nbsp;|&nbsp;
+        <a th:href="@{/ruleName/list}">Rule</a>
+        <span sec:authorize="hasRole('ADMIN')">
+        &nbsp;|&nbsp;<a th:href="@{/user/list}">Users</a>
+        </span>
+    </div>
+
+    <!-- Sous-fragment : informations utilisateur droite -->
+    <div th:fragment="nav-right" class="col-6 text-right">
+        Logged in user: <b th:text="${userConnected}" class="user">Username</b>
+        Role: <b th:text="${userRole}" class="role">Role</b>
+        <form th:action="@{/logout}" method="POST">
+            <input type="submit" value="Logout"/>
+        </form>
+    </div>
+
+</body>
+</html>

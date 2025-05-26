@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.configuration.SecurityTools;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.service.AbstractCrudService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,10 @@ public class BidListController {
 
     @RequestMapping("/list")
     public String home(Model model) {
+
+//        final String userConnected = SecurityTools.getConnectedUser().getUsername();
+//        log.debug("User Connected : {}", userConnected);
+//        model.addAttribute("userConnected", userConnected);
 
         final List<BidList> bidLists = service.getAll();
         log.debug("List of BidList found : {}", bidLists);
