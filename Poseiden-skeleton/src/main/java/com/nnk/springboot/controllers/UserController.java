@@ -74,7 +74,8 @@ public class UserController {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
 
-            userRepository.save(user);
+//            userRepository.save(user);
+            service.create(user);
 
             // Message de succès à afficher après la redirection
             redirectAttributes.addFlashAttribute("message", "User successfully added.");
