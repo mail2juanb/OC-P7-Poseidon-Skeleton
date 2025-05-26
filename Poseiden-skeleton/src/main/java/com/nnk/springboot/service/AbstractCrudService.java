@@ -2,6 +2,7 @@ package com.nnk.springboot.service;
 
 
 import com.nnk.springboot.domain.DomainModel;
+import com.nnk.springboot.exception.IdLimitReachedException;
 import com.nnk.springboot.exception.NotFoundIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,9 @@ import java.util.List;
 
 @Slf4j
 public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> implements CrudService<MODEL> {
-    
+
+    private static final int MAX_TINYINT_ID = 127; // ou 255 si UNSIGNED
+
     protected final JpaRepository<MODEL, Integer> repository;
 
     protected AbstractCrudService(JpaRepository<MODEL, Integer> repository) {
@@ -33,6 +36,10 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
         Integer modelId = model.getId();
         if (modelId != null ){
             throw new NotFoundIdException("You can't create with a " + model.getClass().getSimpleName() + "'s id set to " + modelId);
+        }
+        long count = repository.count();
+        if (count >= MAX_TINYINT_ID) {
+            throw new IdLimitReachedException("Maximum number of entries (" + MAX_TINYINT_ID + ") reached. Cannot insert new one.");
         }
         log.debug("CREATE = {}", model);
         repository.save(model);
