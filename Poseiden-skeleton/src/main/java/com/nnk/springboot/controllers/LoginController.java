@@ -35,22 +35,22 @@ public class LoginController {
 
     // NOTE : PostMapping is managed by Spring Security in SecurityConfig
 
-    // TODO : A implémenter correctement. Je ne sais pas encore où
-    @GetMapping("secure/article-details")
-    public ModelAndView getAllUserArticles() {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("users", userRepository.findAll());
-        mav.setViewName("user/list");
-        return mav;
-    }
+    // TODO : A implémenter correctement. Je ne sais pas encore où. JE NE SAIS PAS A QUOI CA SERT. DELETE ?
+//    @GetMapping("secure/article-details")
+//    public ModelAndView getAllUserArticles() {
+//        ModelAndView mav = new ModelAndView();
+//        mav.addObject("users", userRepository.findAll());
+//        mav.setViewName("user/list");
+//        return mav;
+//    }
 
-    // TODO : Utilisé pour gérer le cas d'un utilisateur qui voudrait aller sur une page dont il n'a pas accès
-    @GetMapping("error")
-    public ModelAndView error() {
-        ModelAndView mav = new ModelAndView();
-        String errorMessage= "You are not authorized for the requested data.";
-        mav.addObject("errorMsg", errorMessage);
-        mav.setViewName("403");
-        return mav;
-    }
+    // TODO : Utilisé pour gérer le cas d'un utilisateur qui voudrait aller sur une page dont il n'a pas accès. DELETE ?
+//    @GetMapping("error")
+//    public ModelAndView error() {
+//        ModelAndView mav = new ModelAndView();
+//        String errorMessage= "You are not authorized for the requested data.";
+//        mav.addObject("errorMsg", errorMessage);
+//        mav.setViewName("403");
+//        return mav;
+//    }
 }
