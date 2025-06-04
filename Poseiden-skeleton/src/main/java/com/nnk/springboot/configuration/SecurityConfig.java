@@ -10,6 +10,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
+/**
+ * Configuring application security with Spring Security.
+ * Defines password encoding, permissions, the login page
+ * and session management rules.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -17,16 +23,31 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
 
+
+    /**
+     * Defines the password encoding bean used for
+     * user registration and authentication.
+     *
+     * @return a password encoder using BCrypt
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
-    // Original -- private static final String[] PERMIT_ALL = {"/css/**", "/login"};
-    //private static final String[] PERMIT_ALL = {"/css/**", "/**"};                                        // NOTE: Work accept all
-    private static final String[] PERMIT_ALL = {"/css/**", "/", "/home", "/403", "/user/add", "/user/validate"};                               // NOTE: Work accept only
+    //private static final String[] PERMIT_ALL = {"/css/**", "/**"};
+    private static final String[] PERMIT_ALL = {"/css/**", "/", "/home", "/403", "/user/add", "/user/validate"};
 
 
+    /**
+     * Configures the HTTP security filter chain.
+     * Specifies the URLs accessible without authentication,
+     * the configuration of the login, logout, and session forms.
+     *
+     * @param http the HttpSecurity object to configure
+     * @return the safety filter chain
+     * @throws Exception in case of configuration error
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http

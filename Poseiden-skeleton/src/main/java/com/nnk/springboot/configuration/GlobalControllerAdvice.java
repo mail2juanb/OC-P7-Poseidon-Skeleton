@@ -4,9 +4,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+
+/**
+ * Global controller that automatically injects the logged-in user's information
+ * into the template for all Thymeleaf views.
+ */
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
+
+    /**
+     * Adds the logged-in user's information (username and role) to the model
+     * so that it can be accessed from the HTML views.
+     * If no user is logged in, the attributes will be {@code null}.
+     *
+     * @param model the model used by the view
+     */
     @ModelAttribute
     public void addUserToModel(Model model) {
         try {
