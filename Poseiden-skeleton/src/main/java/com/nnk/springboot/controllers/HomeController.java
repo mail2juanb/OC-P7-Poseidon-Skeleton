@@ -24,11 +24,11 @@ public class HomeController
 	}
 
 	// FIXME : A priori c'est inutile
-	@RequestMapping("/admin/home")
-	public String adminHome(Model model)
-	{
-		return "redirect:/bidList/list";
-	}
+//	@RequestMapping("/admin/home")
+//	public String adminHome(Model model)
+//	{
+//		return "redirect:/bidList/list";
+//	}
 
 
 }

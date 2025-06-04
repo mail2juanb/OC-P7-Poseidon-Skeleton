@@ -35,7 +35,7 @@ public class LoginController {
 
     // NOTE : PostMapping is managed by Spring Security in SecurityConfig
 
-    // TODO : A implémenter correctement. Je ne sais pas encore où. JE NE SAIS PAS A QUOI CA SERT. DELETE ?
+    // FIXME : A implémenter correctement. Je ne sais pas encore où. JE NE SAIS PAS A QUOI CA SERT. DELETE ?
 //    @GetMapping("secure/article-details")
 //    public ModelAndView getAllUserArticles() {
 //        ModelAndView mav = new ModelAndView();
@@ -44,7 +44,7 @@ public class LoginController {
 //        return mav;
 //    }
 
-    // TODO : Utilisé pour gérer le cas d'un utilisateur qui voudrait aller sur une page dont il n'a pas accès. DELETE ?
+    // FIXME : Utilisé pour gérer le cas d'un utilisateur qui voudrait aller sur une page dont il n'a pas accès. DELETE ?
 //    @GetMapping("error")
 //    public ModelAndView error() {
 //        ModelAndView mav = new ModelAndView();

@@ -17,7 +17,7 @@ public class BidList implements DomainModel<BidList> {
     // NOTE: tinyint(4) est signé par défaut, avec une plage de -128 à 127.
     //        Pas besoin de @Min/@Max tant que la valeur est générée automatiquement par la DB (@GeneratedValue).
     //        À envisager uniquement si l'id devient modifiable côté client.
-    // FIXME : Oui mais que faire si la DB n'accepte pas au dela de 128, a cause du tinyint
+    // FIXME : Oui mais que faire si la DB n'accepte pas au dela de 128, a cause du tinyint, j'ai mis une limite dans les services
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bidlistid", updatable = false)
