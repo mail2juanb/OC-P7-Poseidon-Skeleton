@@ -96,7 +96,7 @@ public class RatingController {
         // Check orderNumber             = @Min -128 / @Max 127
 
         if (hasValidationErrors(rating, result, model)) {
-            return "rating/add";
+            return "rating/update";
         }
 
         service.update(rating);
@@ -126,7 +126,7 @@ public class RatingController {
 
         if (result.hasErrors()) {
             log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
-            model.addAttribute("trade", rating);
+            model.addAttribute("rating", rating);
             return true;
         }
 

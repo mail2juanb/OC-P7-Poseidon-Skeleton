@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+
 
 @Slf4j
 @Controller
@@ -18,13 +17,7 @@ public class LoginController {
     @Autowired
     private UserRepository userRepository;
 
-//    @GetMapping("login")
-//    public ModelAndView login() {
-//        ModelAndView mav = new ModelAndView();
-//        mav.setViewName("login");
-//        log.debug("COUCOUC ON EST LAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
-//        return mav;
-//    }
+
 
     @GetMapping("/login")
     public String login(Model model) {
@@ -44,13 +37,5 @@ public class LoginController {
 //        return mav;
 //    }
 
-    // FIXME : Utilisé pour gérer le cas d'un utilisateur qui voudrait aller sur une page dont il n'a pas accès. DELETE ?
-//    @GetMapping("error")
-//    public ModelAndView error() {
-//        ModelAndView mav = new ModelAndView();
-//        String errorMessage= "You are not authorized for the requested data.";
-//        mav.addObject("errorMsg", errorMessage);
-//        mav.setViewName("403");
-//        return mav;
-//    }
+
 }

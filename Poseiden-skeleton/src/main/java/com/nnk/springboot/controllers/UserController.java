@@ -70,6 +70,11 @@ public class UserController {
                 user.setRole("USER");
             }
 
+            // Validation explicite du rôle pour éviter des erreurs de validation
+            if (user.getRole() == null || user.getRole().isEmpty()) {
+                user.setRole("USER");
+            }
+
             // Hash du mot de passe
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
