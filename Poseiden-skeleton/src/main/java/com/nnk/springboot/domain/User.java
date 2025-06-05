@@ -48,9 +48,10 @@ public class User implements DomainModel<User> {
 
 
     public User update(User user){
-        this.id = user.getId();
+        //this.id = user.getId();       <-- l'id ne doit pas changer lors d'un update
         this.username = user.getUsername();
         this.password = user.getPassword();
+        this.fullname = user.getFullname();
         this.role = user.getRole();
 
         return this;

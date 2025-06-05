@@ -49,7 +49,7 @@ public class RuleName implements DomainModel<RuleName> {
 
     @Override
     public RuleName update(RuleName ruleName){
-        this.id = ruleName.getId();
+        //this.id = ruleName.getId();
         this.name = ruleName.getName();
         this.description = ruleName.getDescription();
         this.json = ruleName.getJson();

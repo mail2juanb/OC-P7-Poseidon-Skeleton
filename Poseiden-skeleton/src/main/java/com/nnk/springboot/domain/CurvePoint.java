@@ -45,7 +45,7 @@ public class CurvePoint implements DomainModel<CurvePoint> {
 
     @Override
     public CurvePoint update(CurvePoint curvePoint){
-        this.id = curvePoint.getId();
+        //this.id = curvePoint.getId();
         this.curveId = curvePoint.getCurveId();
         this.term = curvePoint.getTerm();
         this.value = curvePoint.getValue();

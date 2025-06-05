@@ -49,7 +49,7 @@ public class Rating implements DomainModel<Rating> {
 
     @Override
     public Rating update(Rating rating){
-        this.id = rating.getId();
+        //this.id = rating.getId();
         this.moodysRating = rating.getMoodysRating();
         this.sandPRating = rating.getSandPRating();
         this.fitchRating = rating.getFitchRating();

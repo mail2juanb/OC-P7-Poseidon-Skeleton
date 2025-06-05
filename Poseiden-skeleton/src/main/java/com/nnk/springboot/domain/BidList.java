@@ -104,7 +104,7 @@ public class BidList implements DomainModel<BidList> {
 
     @Override
     public BidList update(BidList bidList){
-        this.id = bidList.getId();
+        //this.id = bidList.getId();
         this.account = bidList.getAccount();
         this.type = bidList.getType();
         this.bidQuantity = bidList.getBidQuantity();
