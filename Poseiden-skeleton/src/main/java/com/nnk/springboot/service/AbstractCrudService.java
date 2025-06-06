@@ -9,6 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+
+/**
+ * Generic abstract service for CRUD operations on data models.
+ * This service is responsible for managing entities of type {@link MODEL}.
+ * It provides methods for creating, reading, updating, and deleting entities.
+ *
+ * @param <MODEL> the model type on which this service operates
+ */
 @Slf4j
 public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> implements CrudService<MODEL> {
 
