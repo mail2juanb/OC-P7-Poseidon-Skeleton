@@ -15,30 +15,69 @@ import java.util.List;
  * This service is responsible for managing entities of type {@link MODEL}.
  * It provides methods for creating, reading, updating, and deleting entities.
  *
- * @param <MODEL> the model type on which this service operates
+ * @param <MODEL> the model type on which this service operates {@link DomainModel}
  */
 @Slf4j
 public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> implements CrudService<MODEL> {
 
+
+    /**
+     * Upper limit allowed for the number of entries, based on the SQL TINYINT type (127 signed, or 255 unsigned).
+     * This is used to prevent insertion beyond what the database can handle if the ID type is constrained.
+     */
     private static final int MAX_TINYINT_ID = 127; // ou 255 si UNSIGNED
 
+
+    /**
+     * Reference to the Spring Data JPA repository used to access database data.
+     * Injected via the constructor into concrete classes.
+     */
     protected final JpaRepository<MODEL, Integer> repository;
 
+
+    /**
+     * Constructor to initialize the repository used by the service.
+     *
+     * @param repository le repository JPA associé à l'entité
+     */
     protected AbstractCrudService(JpaRepository<MODEL, Integer> repository) {
         this.repository = repository;
     }
 
+
+    /**
+     * Retrieves all persisted entities of this type.
+     *
+     * @return the list of all records in the database
+     */
     @Override
     public List<MODEL> getAll() {
         return repository.findAll();
     }
 
+
+    /**
+     * Retrieves an entity from the database based on its identifier.
+     *
+     * @param id the identifier of the entity to be searched for
+     * @return the corresponding entity
+     * @throws NotFoundIdException if no record matches this ID
+     */
     @Override
     public MODEL getById(Integer id){
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundIdException("id not found with : " + id));
     }
 
+
+    /**
+     * Creates a new entity in the database.
+     * Checks that the ID is null (to avoid forcing a specific ID) and that the TINYINT limit has not been reached.
+     *
+     * @param model the entity to be registered
+     * @throws NotFoundIdException if the ID is already defined (insertion not allowed with ID)
+     * @throws IdLimitReachedException if the maximum number of entries is reached
+     */
     @Override
     public void create(MODEL model){
         Integer modelId = model.getId();
@@ -53,8 +92,15 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
         repository.save(model);
     }
 
-    // NOTE: Vérifier ce qu'il se passe lorsque l'ID n'est ps trouvé et donc = null --> Tests unitaires
-    //       Il se passe que l'exception idNotFound est levée
+
+    /**
+     * Updates an existing entity with the provided data.
+     * The entity is first retrieved from the database to ensure that it exists,
+     * then updated using its {@code update()} method.
+     *
+     * @param model the entity containing the new values
+     * @throws NotFoundIdException if the entity to be updated does not exist
+     */
     @Override
     public void update(MODEL model){
         MODEL updatedModel = getById(model.getId())
@@ -63,6 +109,13 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
         repository.save(updatedModel);
     }
 
+
+    /**
+     * Removes an entity by its ID.
+     *
+     * @param id l'identifiant de l'entité à supprimer
+     * @throws NotFoundIdException if no entity with this ID is found
+     */
     @Override
     public void delete(Integer id){
         if (!repository.existsById(id)) {
