@@ -35,7 +35,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    //private static final String[] PERMIT_ALL = {"/css/**", "/**"};
+
     private static final String[] PERMIT_ALL = {"/css/**", "/", "/home", "/403", "/user/add", "/user/validate"};
 
 
@@ -73,12 +73,15 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
+
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/403") // Redirection vers page 403 personnalisée
                 )
+
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                 )
+
                 .build();
     }
 

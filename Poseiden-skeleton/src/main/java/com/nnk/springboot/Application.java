@@ -19,16 +19,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *   <li>Thymeleaf web interface</li>
  * </ul>
  *
- * <h3>Application Configuration</h3>
- * <p>Database and JPA settings:</p>
- * <pre>
- * spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
- * spring.datasource.url=jdbc:mysql://localhost:3306/demo
- * spring.jpa.hibernate.ddl-auto=none
- * spring.jpa.defer-datasource-initialization=true
- * spring.sql.init.mode=always
- * </pre>
- *
  * @author Michaud Jean-Baptiste
  * @version 1.0
  *

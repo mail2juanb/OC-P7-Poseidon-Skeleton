@@ -27,7 +27,6 @@ public class GlobalControllerAdvice {
             model.addAttribute("userConnected", user.getUsername());
             model.addAttribute("userRole", user.getRole());
         } catch (Exception e) {
-            // Si l'utilisateur n'est pas connecté, on ignore silencieusement
             model.addAttribute("userConnected", null);
             model.addAttribute("userRole", null);
         }
