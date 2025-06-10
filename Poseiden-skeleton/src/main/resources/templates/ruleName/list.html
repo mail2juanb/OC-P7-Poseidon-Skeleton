@@ -26,19 +26,26 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="ruleName : ${ruleNames}">
-                <td style="width: 10%" th:text="${ruleName.id}"></td>
-                <td th:text="${ruleName.name}"></td>
-                <td th:text="${ruleName.description}"></td>
-                <td th:text="${ruleName.json}"></td>
-                <td th:text="${ruleName.template}"></td>
-                <td th:text="${ruleName.sqlStr}"></td>
-                <td th:text="${ruleName.sqlPart}"></td>
-                <td style="width: 15%" class="text-center">
-                    <a th:href="@{/ruleName/update/{id}(id=${ruleName.id})}">Edit</a>&nbsp;|&nbsp;
-                    <a th:href="@{/ruleName/delete/{id}(id=${ruleName.id})}">Delete</a>
-                </td>
-            </tr>
+            <th:block th:if="${not #lists.isEmpty(ruleNames)}">
+                <tr th:each="ruleName : ${ruleNames}">
+                    <td style="width: 10%" th:text="${ruleName.id}"></td>
+                    <td th:text="${ruleName.name}"></td>
+                    <td th:text="${ruleName.description}"></td>
+                    <td th:text="${ruleName.json}"></td>
+                    <td th:text="${ruleName.template}"></td>
+                    <td th:text="${ruleName.sqlStr}"></td>
+                    <td th:text="${ruleName.sqlPart}"></td>
+                    <td style="width: 15%" class="text-center">
+                        <a th:href="@{/ruleName/update/{id}(id=${ruleName.id})}">Edit</a>&nbsp;|&nbsp;
+                        <a th:href="@{/ruleName/delete/{id}(id=${ruleName.id})}">Delete</a>
+                    </td>
+                </tr>
+            </th:block>
+            <th:block th:unless="${not #lists.isEmpty(ruleNames)}">
+                <tr>
+                    <td colspan="8" class="text-center">Nothing to display</td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
     </div>

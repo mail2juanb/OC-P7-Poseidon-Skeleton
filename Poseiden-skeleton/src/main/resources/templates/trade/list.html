@@ -23,16 +23,23 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="trade : ${trades}">
-                <td style="width: 10%" th:text="${trade.id}"></td>
-                <td th:text="${trade.account}"></td>
-                <td th:text="${trade.type}"></td>
-                <td th:text="${trade.buyQuantity}"></td>
-                <td style="width: 15%" class="text-center">
-                    <a th:href="@{/trade/update/{id}(id=${trade.id})}">Edit</a>&nbsp;|&nbsp;
-                    <a th:href="@{/trade/delete/{id}(id=${trade.id})}">Delete</a>
-                </td>
-            </tr>
+            <th:block th:if="${not #lists.isEmpty(trades)}">
+                <tr th:each="trade : ${trades}">
+                    <td style="width: 10%" th:text="${trade.id}"></td>
+                    <td th:text="${trade.account}"></td>
+                    <td th:text="${trade.type}"></td>
+                    <td th:text="${trade.buyQuantity}"></td>
+                    <td style="width: 15%" class="text-center">
+                        <a th:href="@{/trade/update/{id}(id=${trade.id})}">Edit</a>&nbsp;|&nbsp;
+                        <a th:href="@{/trade/delete/{id}(id=${trade.id})}">Delete</a>
+                    </td>
+                </tr>
+            </th:block>
+            <th:block th:unless="${not #lists.isEmpty(trades)}">
+                <tr>
+                    <td colspan="5" class="text-center">Nothing to display</td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
     </div>

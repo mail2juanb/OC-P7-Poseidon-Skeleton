@@ -23,6 +23,7 @@
             </tr>
             </thead>
             <tbody>
+            <th:block th:if="${not #lists.isEmpty(curvePoints)}">
             <tr th:each="curvePoint : ${curvePoints}">
                 <td style="width: 10%" th:text="${curvePoint.id}"></td>
                 <td th:text="${curvePoint.curveId}"></td>
@@ -33,6 +34,12 @@
                     <a th:href="@{/curvePoint/delete/{id}(id=${curvePoint.id})}">Delete</a>
                 </td>
             </tr>
+            </th:block>
+            <th:block th:unless="${not #lists.isEmpty(curvePoints)}">
+                <tr>
+                    <td colspan="5" class="text-center">Nothing to display</td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
     </div>
