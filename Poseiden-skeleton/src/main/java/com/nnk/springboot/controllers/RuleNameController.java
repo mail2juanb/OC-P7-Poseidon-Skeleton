@@ -17,16 +17,27 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 
+/**
+ * Controller responsible for handling web requests related to RuleName entities.
+ * Provides endpoints for listing, creating, updating, and deleting RuleNames.
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Controller
 @RequestMapping("/ruleName")
 public class RuleNameController {
 
+    // Injecting the generic CRUD service for RuleName entities
     private final CrudService<RuleName> service;
 
 
 
+    /**
+     * Display the list of all RuleNames.
+     *
+     * @param model the Spring Model to populate the view
+     * @return the view name to display the list of rule names
+     */
     @GetMapping("/list")
     public String home(Model model) {
 
@@ -39,14 +50,26 @@ public class RuleNameController {
     }
 
 
-
+    /**
+     * Display the form to add a new RuleName.
+     *
+     * @param ruleName an empty RuleName object to bind form inputs
+     * @return the view name of the add form
+     */
     @GetMapping("/add")
     public String addRuleForm(RuleName ruleName) {
         return "ruleName/add";
     }
 
 
-
+    /**
+     * Validate and persist a new RuleName.
+     *
+     * @param ruleName the RuleName object populated from form inputs
+     * @param result contains validation results
+     * @param model the model to return data in case of validation error
+     * @return redirect to list view on success, otherwise return to form
+     */
     @PostMapping("/validate")
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
 
@@ -76,7 +99,13 @@ public class RuleNameController {
     }
 
 
-
+    /**
+     * Display the form to update an existing RuleName.
+     *
+     * @param id the ID of the RuleName to update
+     * @param model the model to pass the current RuleName to the view
+     * @return the update form view name
+     */
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
@@ -88,7 +117,15 @@ public class RuleNameController {
     }
 
 
-
+    /**
+     * Validate and update an existing RuleName.
+     *
+     * @param id the ID of the RuleName to update
+     * @param ruleName the updated RuleName object
+     * @param result holds validation errors if any
+     * @param model the model to return data in case of validation error
+     * @return redirect to list view on success, otherwise return to form
+     */
     @PostMapping("/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                              BindingResult result, Model model) {
@@ -112,7 +149,13 @@ public class RuleNameController {
     }
 
 
-
+    /**
+     * Delete a RuleName by its ID.
+     *
+     * @param id the ID of the RuleName to delete
+     * @param model the Spring model (not used here but may be used in the future)
+     * @return redirect to the RuleName list view
+     */
     @GetMapping("/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
 
@@ -125,8 +168,14 @@ public class RuleNameController {
 
 
 
-
-
+    /**
+     * Utility method to check for validation errors and return them in the model.
+     *
+     * @param ruleName the entity being validated
+     * @param result the result of the validation
+     * @param model the model to populate with errors
+     * @return true if errors exist, false otherwise
+     */
     private boolean hasValidationErrors(RuleName ruleName, BindingResult result, Model model) {
 
         if (result.hasErrors()) {

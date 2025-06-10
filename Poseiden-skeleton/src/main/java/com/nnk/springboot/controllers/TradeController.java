@@ -17,17 +17,26 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 
-
+/**
+ * Controller responsible for handling web requests related to Trade entities.
+ * Provides endpoints for listing, creating, updating, and deleting Trades.
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Controller
 @RequestMapping("/trade")
 public class TradeController {
 
+    // Injecting the generic CRUD service for Trade entities
     private final CrudService<Trade> service;
 
 
-
+    /**
+     * Display the list of all Trades.
+     *
+     * @param model the Spring Model to populate the view
+     * @return the view name to display the list of trades
+     */
     @GetMapping("/list")
     public String home(Model model) {
 
@@ -40,14 +49,26 @@ public class TradeController {
     }
 
 
-
+    /**
+     * Display the form to add a new Trade.
+     *
+     * @param trade an empty Trade object to bind form inputs
+     * @return the view name of the add form
+     */
     @GetMapping("/add")
     public String addTradeForm(Trade trade) {
         return "trade/add";
     }
 
 
-
+    /**
+     * Validate and persist a new Trade.
+     *
+     * @param trade the Trade object populated from form inputs
+     * @param result contains validation results
+     * @param model the model to return data in case of validation error
+     * @return redirect to list view on success, otherwise return to form
+     */
     @PostMapping("/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
 
@@ -64,19 +85,19 @@ public class TradeController {
             return "trade/add";
         }
 
-        // Try catch supprimé car attrapé par le GlobalExceptionHandler
-//        try {
-//            service.create(trade);
-//        } catch (Exception exception){
-//            log.error("Service error in {} during updateTrade : {}", exception.getClass().getSimpleName(), exception.getMessage());
-//            return "trade/add";
-//        }
         service.create(trade);
 
         return "redirect:/trade/list";
     }
 
 
+    /**
+     * Display the form to update an existing Trade.
+     *
+     * @param id the ID of the Trade to update
+     * @param model the model to pass the current Trade to the view
+     * @return the update form view name
+     */
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
@@ -89,6 +110,15 @@ public class TradeController {
     }
 
 
+    /**
+     * Validate and update an existing Trade.
+     *
+     * @param id the ID of the Trade to update
+     * @param trade the updated Trade object
+     * @param result holds validation errors if any
+     * @param model the model to return data in case of validation error
+     * @return redirect to list view on success, otherwise return to form
+     */
     @PostMapping("/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result, Model model) {
@@ -102,13 +132,6 @@ public class TradeController {
             return "trade/update";
         }
 
-        // Try catch supprimé car attrapé par le GlobalExceptionHandler
-//        try {
-//            service.update(trade);
-//        } catch (Exception exception){
-//            log.error("Service error in {} during updateTrade : {}", exception.getClass().getSimpleName(), exception.getMessage());
-//            return "trade/update";
-//        }
         service.update(trade);
         log.debug("Update Trade with id {} = {}", id, trade);
         return "redirect:/trade/list";
@@ -116,6 +139,13 @@ public class TradeController {
     }
 
 
+    /**
+     * Delete a Trade by its ID.
+     *
+     * @param id the ID of the Trade to delete
+     * @param model the Spring model (not used here but may be used in the future)
+     * @return redirect to the Trade list view
+     */
     @GetMapping("/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
 
@@ -128,6 +158,14 @@ public class TradeController {
 
 
 
+    /**
+     * Utility method to check for validation errors and return them in the model.
+     *
+     * @param trade the entity being validated
+     * @param result the result of the validation
+     * @param model the model to populate with errors
+     * @return true if errors exist, false otherwise
+     */
     private boolean hasValidationErrors(Trade trade, BindingResult result, Model model) {
 
         if (result.hasErrors()) {

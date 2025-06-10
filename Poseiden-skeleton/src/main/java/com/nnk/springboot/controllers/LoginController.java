@@ -9,33 +9,41 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
+/**
+ * Controller responsible for handling the login page requests.
+ * <p>
+ * This controller provides the login view, where the user can input their credentials.
+ * It also initializes a new {@link User} object in the model for binding user input during login.
+ * </p>
+ */
 @Slf4j
 @Controller
-//@RequestMapping("app")
 public class LoginController {
 
+    // Injecting the UserRepository to interact with the database.
     @Autowired
     private UserRepository userRepository;
 
 
-
+    /**
+     * Handles GET requests to the "/login" URL and renders the login page.
+     * <p>
+     * It adds an empty {@link User} object to the model so that it can be used for form binding
+     * when the user submits their credentials.
+     * </p>
+     *
+     * @param model the model object used to pass attributes to the view (here, a new User instance)
+     * @return the name of the view to render, i.e., "login"
+     */
     @GetMapping("/login")
     public String login(Model model) {
+
         model.addAttribute("user", new User());
         log.debug("GET PAGE LOGIN VIEW");
+
         return "login";
     }
 
-    // NOTE : PostMapping is managed by Spring Security in SecurityConfig
-
-    // FIXME : A implémenter correctement. Je ne sais pas encore où. JE NE SAIS PAS A QUOI CA SERT. DELETE ?
-//    @GetMapping("secure/article-details")
-//    public ModelAndView getAllUserArticles() {
-//        ModelAndView mav = new ModelAndView();
-//        mav.addObject("users", userRepository.findAll());
-//        mav.setViewName("user/list");
-//        return mav;
-//    }
-
+    // NOTE: The POST request for login handling is managed by Spring Security.
 
 }
