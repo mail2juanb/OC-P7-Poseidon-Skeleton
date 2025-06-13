@@ -1,48 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8"/>
-    <title>Home</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
-    <div class="row"><h2>Bid List</h2></div>
-    <div class="row">
-        <a th:href="@{/bidList/add}" class="btn btn-primary btn-sm">Add New</a>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Account</th>
-                <th>Type</th>
-                <th>Bid Quantity</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:if="${not #lists.isEmpty(bidLists)}">
-                <tr th:each="bidList : ${bidLists}">
-                    <td style="width: 10%" th:text="${bidList.id}"></td>
-                    <td th:text="${bidList.account}"></td>
-                    <td th:text="${bidList.type}"></td>
-                    <td th:text="${bidList.bidQuantity}"></td>
-                    <td style="width: 15%" class="text-center">
-                        <a th:href="@{/bidList/update/{id}(id=${bidList.id})}">Edit</a>&nbsp;|&nbsp;
-                        <a th:href="@{/bidList/delete/{id}(id=${bidList.id})}">Delete</a>
-                    </td>
-                </tr>
-            </th:block>
-            <th:block th:unless="${not #lists.isEmpty(bidLists)}">
-                <tr>
-                    <td colspan="5" class="text-center">Nothing to display</td>
-                </tr>
-            </th:block>
-            </tbody>
-        </table>
-    </div>
-</div>
-</body>
+    <head th:replace="~{fragments/fragments :: head}"></head>
+    <body>
+        <div class="container">
+            <div th:replace="~{fragments/fragments :: navbar}"></div>
+            <div class="row"><h2>Bid List</h2></div>
+            <div class="row">
+                <a th:href="@{/bidList/add}" class="btn btn-primary btn-sm">Add New</a>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Account</th>
+                        <th>Type</th>
+                        <th>Bid Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${not #lists.isEmpty(bidLists)}">
+                        <tr th:each="bidList : ${bidLists}">
+                            <td style="width: 10%" th:text="${bidList.id}"></td>
+                            <td th:text="${bidList.account}"></td>
+                            <td th:text="${bidList.type}"></td>
+                            <td th:text="${bidList.bidQuantity}"></td>
+                            <td style="width: 15%" class="text-center">
+                                <a th:href="@{/bidList/update/{id}(id=${bidList.id})}">Edit</a>&nbsp;|&nbsp;
+                                <a th:href="@{/bidList/delete/{id}(id=${bidList.id})}">Delete</a>
+                            </td>
+                        </tr>
+                    </th:block>
+                    <th:block th:unless="${not #lists.isEmpty(bidLists)}">
+                        <tr>
+                            <td colspan="5" class="text-center">Nothing to display</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
 </html>

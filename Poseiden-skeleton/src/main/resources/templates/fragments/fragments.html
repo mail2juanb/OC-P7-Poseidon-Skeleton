@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+
+    <head th:fragment="head">
+        <meta charset="utf-8"/>
+        <title>Poseidon - Capital Solution</title>
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- Main fragment -->
+        <div th:fragment="navbar">
+            <div class="row">
+                <div th:replace="~{fragments/fragments :: nav-left}"></div>
+                <div th:replace="~{fragments/fragments :: nav-right}"></div>
+            </div>
+        </div>
+
+        <!-- Sub-fragment: left navigation -->
+        <div th:fragment="nav-left" class="col-6">
+            <a th:href="@{/bidList/list}">Bid List</a>&nbsp;|&nbsp;
+            <a th:href="@{/curvePoint/list}">Curve Points</a>&nbsp;|&nbsp;
+            <a th:href="@{/rating/list}">Ratings</a>&nbsp;|&nbsp;
+            <a th:href="@{/trade/list}">Trade</a>&nbsp;|&nbsp;
+            <a th:href="@{/ruleName/list}">Rule</a>
+            <span sec:authorize="hasRole('ADMIN')">
+            &nbsp;|&nbsp;<a th:href="@{/user/list}">Users</a>
+            </span>
+        </div>
+
+        <!-- Sub-fragment: user information on the right -->
+        <div th:fragment="nav-right" class="col-6 text-right">
+            Logged in user: <b th:text="${userConnected}" class="user">Username</b>
+            Role: <b th:text="${userRole}" class="role">Role</b>
+            <form th:action="@{/logout}" method="POST">
+                <input type="submit" value="Logout"/>
+            </form>
+        </div>
+
+    </body>
+
+</html>

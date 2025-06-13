@@ -1,29 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8"/>
-    <title> Home </title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-</head>
-<body>
-    <h3> HOME PAGE </h3>
-
-    <!-- Flash message to inform the user that the account has been created.-->
-    <div th:if="${message}" class="alert alert-success" role="alert">
-        <p th:text="${message}"></p>
-    </div>
-    <!-- Flash message to inform the user that the user is disconnected.-->
-    <div th:if="${param.logout}" class="alert alert-success" role="alert">
-        You have been logged out successfully.
-    </div>
-    <!-- Flash message to inform the user that bad credentials.-->
-    <div th:if="${param.error}" class="alert alert-danger" role="alert">
-        Invalid username or password. Please try again or create one.
-    </div>
-
-    <p>
-        <a th:href="@{/login}">Login</a> or create one <a th:href="@{/user/add}">Create User</a>
-    </p>
-</body>
+    <head th:replace="~{fragments/fragments :: head}"></head>
+    <body>
+        <h3> HOME PAGE </h3>
+        <!-- Flash message to inform the user that the account has been created.-->
+        <div th:if="${message}" class="alert alert-success" role="alert">
+            <p th:text="${message}"></p>
+        </div>
+        <!-- Flash message to inform the user that the user is disconnected.-->
+        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+            You have been logged out successfully.
+        </div>
+        <!-- Flash message to inform the user that bad credentials.-->
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            Invalid username or password. Please try again or create one.
+        </div>
+        <p>
+            <a th:href="@{/login}">Login</a> or create one <a th:href="@{/user/add}">Create User</a>
+        </p>
+    </body>
 </html>
