@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(CurvePointController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CurvePointControllerTest {
+public class CurvePointControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BidListController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class BidListControllerTest {
+public class BidListControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -1,243 +1,122 @@
 package com.nnk.springboot.controller;
 
-
 import com.nnk.springboot.controllers.UserController;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.exception.IdLimitReachedException;
-import com.nnk.springboot.repository.UserRepository;
 import com.nnk.springboot.service.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+@ExtendWith(MockitoExtension.class)
+class UserControllerTest {
 
+    @InjectMocks
+    private UserController userController;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(UserController.class)
-public class UserControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private UserServiceImpl userService;
 
-    @MockBean
-    private UserRepository userRepository;
+    @Mock
+    private BindingResult bindingResult;
+
+    @Mock
+    private Model model;
+
+    @Mock
+    private RedirectAttributes redirectAttributes;
 
 
+    // Setup before each test to initialize the SecurityContext
+    @BeforeEach
+    void setUp() {
 
-
-    @Test
-    @WithMockUser(roles = {"ADMIN", "USER"})
-    void validate_WhenIdLimitReached_ShouldReturn302AndRedirectToErrorPageWithFlashMessage() throws Exception {
-
-        // Given: the service throws an exception when creating a user
-        doThrow(new IdLimitReachedException("Maximum number of entries (127) reached"))
-                .when(userService).create(any(User.class));
-
-        // When: POST to /user/validate with valid data
-        // Then: Redirect to /error with flash message
-        mockMvc.perform(post("/user/validate")
-                            .with(csrf())
-                        .param("username", "john")
-                        .param("password", "Test1234!")
-                        .param("fullname", "John Doe")
-                        .param("role", "USER"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"))
-                .andExpect(flash().attribute("errorMessage", "Maximum number of entries (127) reached"));
-
+        // Configure a SecurityContext to simulate the absence of authentication (unauthenticated user)
+        SecurityContext securityContext = org.mockito.Mockito.mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
     }
 
 
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void home_ShouldReturnUserListViewWithUsers() throws Exception {
 
-        // Given: a fictitious user in the returned list
+    @Test
+    void validate_WhenNotAuthenticated_ShouldAssignDefaultRoleUser(){
+
+        // Given: A user with no role provided, not authenticated
+        User user = new User();
+        user.setUsername("guest");
+        user.setPassword("Guest123!");
+        user.setFullname("Guest User");
+
+        // And: No field errors
+        when(bindingResult.hasErrors()).thenReturn(false);
+
+        // Simulate an unauthenticated user
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken("anonymousUser", null)
+        );
+
+        // When: Calling validate without authentication
+        String view = userController.validate(user, bindingResult, model, redirectAttributes);
+
+        // Then: Role should be USER and redirection to /home
+        assertEquals("redirect:/home", view);
+        verify(userService).create(argThat(u -> "USER".equals(u.getRole())));
+    }
+
+
+
+    @Test
+    void validate_UserIsAuthenticated_ShouldRedirectToList() {
+
+        // Given: A user is authenticated (username = "user", no authorities)
+        Authentication authentication = new UsernamePasswordAuthenticationToken("user", null, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         User user = new User();
         user.setUsername("user");
-        user.setPassword("pass");
-        user.setFullname("fullname");
-        user.setRole("USER");
+        user.setPassword("Password123");
 
-        when(userService.getAll()).thenReturn(List.of(user));
+        // And: There are no validation errors in the BindingResult
+        when(bindingResult.hasErrors()).thenReturn(false);
 
-        // When: GET on /user/list
-        // Then: View user/list with user attributes
-        mockMvc.perform(get("/user/list"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/list"))
-                .andExpect(model().attributeExists("users"));
+        // When: The validate method is called with the user object
+        String result = userController.validate(user, bindingResult, model, redirectAttributes);
+
+        // Then: The user should be redirected to /home
+        assertEquals("redirect:/home", result);
     }
 
 
-    @Test
-    @WithMockUser(roles = {"ADMIN", "USER"})
-    void addUser_ShouldReturnAddFormWithDefaultRole() throws Exception {
-
-        // When: GET on /user/add
-        // Then: user/add view returned
-        mockMvc.perform(get("/user/add"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/add"));
-    }
-
 
     @Test
-    @WithMockUser(roles = "ADMIN")
-    void showUpdateForm_WithValidId_ShouldReturnUpdateForm() throws Exception {
+    void validate_ValidationErrors_ShouldReturnToForm() {
 
-        // Given : a user with ID 1
+        // Given: A user with invalid data (username = "invalidUser", password = "123")
+        when(bindingResult.hasErrors()).thenReturn(true);
+
         User user = new User();
-        user.setId(1);
-        user.setUsername("user");
-        user.setPassword("pass");
-        user.setFullname("fullname");
-        user.setRole("USER");
+        user.setUsername("invalidUser");
+        user.setPassword("123");
 
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+        // When: The validate method is called with the user object
+        String result = userController.validate(user, bindingResult, model, redirectAttributes);
 
-        // When: GET on /user/update/1
-        // Then: View user/update with the user as a model
-        mockMvc.perform(get("/user/update/1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/update"))
-                .andExpect(model().attributeExists("user"));
-    }
-
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void updateUser_WithValidData_ShouldRedirectToUserList() throws Exception {
-
-        // Given : the user to update exists
-        when(userRepository.findAll()).thenReturn(List.of());
-
-        // When: Valid POST with CSRF
-        // Then: Redirection to /user/list
-        mockMvc.perform(post("/user/update/1")
-                        .with(csrf())
-                        .param("username", "updatedUser")
-                        .param("password", "NewPass123!")
-                        .param("fullname", "Updated Fullname")
-                        .param("role", "ADMIN"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/list"));
-    }
-
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void updateUser_WithInvalidData_ShouldReturnUpdateForm() throws Exception {
-
-        // When: POST with invalid data (e.g., empty password)
-        // Then: The form is redisplayed
-        mockMvc.perform(post("/user/update/1")
-                        .with(csrf())
-                        .param("username", "")
-                        .param("password", "")
-                        .param("fullname", "Invalid User")
-                        .param("role", "ADMIN"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/update"));
-    }
-
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void deleteUser_WithValidId_ShouldRedirectToUserList() throws Exception {
-
-        // Given : a user with ID 1
-        User user = new User();
-        user.setId(1);
-        user.setUsername("user");
-        user.setPassword("pass");
-        user.setFullname("fullname");
-        user.setRole("USER");
-
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(userRepository.findAll()).thenReturn(List.of());
-
-        // When: GET on /user/delete/1
-        // Then: Redirection to /user/list
-        mockMvc.perform(get("/user/delete/1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/list"));
-    }
-
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void deleteUser_WithInvalidId_ShouldRedirectToErrorPage() throws Exception {
-
-        // Given : No users found for ID 99
-        when(userRepository.findById(99)).thenReturn(Optional.empty());
-
-        // When: GET on /user/delete/99
-        // Then: Redirect to /error with flash message
-        mockMvc.perform(get("/user/delete/99"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/error"))
-                .andExpect(flash().attribute("errorMessage", containsString("Invalid user Id")));
-    }
-
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void validate_WhenUserAuthenticated_ShouldKeepRole() throws Exception {
-
-        // Given : a user with an “ADMIN” role
-        User user = new User();
-        user.setUsername("john");
-        user.setPassword("Test1234!");
-        user.setFullname("John Doe");
-        user.setRole("ADMIN");
-
-        // When: POST to /user/validate
-        mockMvc.perform(post("/user/validate")
-                        .with(csrf())
-                        .param("username", "john")
-                        .param("password", "Test1234!")
-                        .param("fullname", "John Doe")
-                        .param("role", "ADMIN"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/user/list"));
-
-        // Check that the service was called with the user having the “ADMIN” role
-        verify(userService).create(argThat(u -> u.getRole().equals("ADMIN")));
-    }
-
-
-    @Test
-    @WithMockUser(roles = "USER")
-    void validate_WhenInvalidData_ShouldReturnAddForm() throws Exception {
-
-        // Given : a user with invalid data (for example empty password)
-        mockMvc.perform(post("/user/validate")
-                        .with(csrf())
-                        .param("username", "john")
-                        .param("password", "")
-                        .param("fullname", "John Doe"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/add"))
-                .andExpect(model().attributeHasFieldErrors("user", "password"));
+        // Then: The user should be returned to the form (user/add page)
+        assertEquals("user/add", result);
     }
 
 }

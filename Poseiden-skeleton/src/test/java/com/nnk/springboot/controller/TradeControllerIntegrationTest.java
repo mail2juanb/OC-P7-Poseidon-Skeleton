@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TradeController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class TradeControllerTest {
+public class TradeControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

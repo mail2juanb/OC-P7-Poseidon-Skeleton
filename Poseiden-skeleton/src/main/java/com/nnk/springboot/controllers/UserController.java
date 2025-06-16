@@ -98,11 +98,6 @@ public class UserController {
                 user.setRole("USER");
             }
 
-            // Explicit role validation to avoid validation errors
-            if (user.getRole() == null || user.getRole().isEmpty()) {
-                user.setRole("USER");
-            }
-
             // Hash the password using BCrypt
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));

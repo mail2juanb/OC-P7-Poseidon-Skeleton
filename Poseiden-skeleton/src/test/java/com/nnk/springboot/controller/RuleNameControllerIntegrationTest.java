@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(RuleNameController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class RuleNameControllerTest {
+public class RuleNameControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
