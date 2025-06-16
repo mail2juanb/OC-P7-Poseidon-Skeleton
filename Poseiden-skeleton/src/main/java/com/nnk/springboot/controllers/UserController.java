@@ -55,7 +55,6 @@ public class UserController {
     public String home(Model model) {
 
         final List<User> users = service.getAll();
-        log.debug("Liste des utilisateurs récupérés : {}", users);
         model.addAttribute("users", users);
 
         return "user/list";
@@ -72,7 +71,6 @@ public class UserController {
     @GetMapping("/user/add")
     public String addUser(User user) {
         user.setRole("USER"); // Valeur par défaut
-        log.debug("GET PAGE USER/ADD VIEW");
         return "user/add";
     }
 
@@ -94,7 +92,6 @@ public class UserController {
             // Check if the user is authenticated
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser");
-            log.debug("isAuthenticated = {}", isAuthenticated);
 
             // Prevent setting a role other than 'USER' if the user is not authenticated
             if (!isAuthenticated) {
@@ -184,6 +181,7 @@ public class UserController {
      */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
+
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
         model.addAttribute("users", userRepository.findAll());

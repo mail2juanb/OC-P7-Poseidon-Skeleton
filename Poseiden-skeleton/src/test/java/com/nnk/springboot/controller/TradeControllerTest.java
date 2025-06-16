@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(TradeController.class)
-@AutoConfigureMockMvc(addFilters = false) // <--- désactive les filtres Spring Security
+@AutoConfigureMockMvc(addFilters = false)
 public class TradeControllerTest {
 
     @Autowired
@@ -35,11 +35,11 @@ public class TradeControllerTest {
     @MockBean
     private CrudService<Trade> service;
 
-    // 1. Test de la méthode home : récupérer et afficher la liste des Trade
+
     @Test
     public void home_ShouldReturn200AndTradeListView() throws Exception {
 
-        // Given : une liste de Trade simulée renvoyée par le service
+        // Given : a simulated trade list returned by the service
         Trade trade1 = new Trade();
         trade1.setId(1);
         trade1.setAccount("Account1");
@@ -53,8 +53,8 @@ public class TradeControllerTest {
         List<Trade> trades = Arrays.asList(trade1, trade2);
         BDDMockito.given(service.getAll()).willReturn(trades);
 
-        // When : on effectue une requête GET sur /trade/list
-        // Then : la vue "trade/list" est retournée avec une liste contenant 2 éléments
+        // When: a GET request is made to /trade/list
+        // Then: the “trade/list” view is returned with a list containing 2 items
         mockMvc.perform(get("/trade/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/list"))
@@ -62,26 +62,22 @@ public class TradeControllerTest {
     }
 
 
-
-    // 2. Test de la méthode addTradeForm : accéder au formulaire d'ajout
     @Test
     public void addTradeForm_ShouldReturnTradeAddView() throws Exception {
 
-        // When : on effectue une requête GET sur /trade/add
-        // Then : la vue "trade/add" est retournée avec le formulaire vide
+        // When: a GET request is made to /trade/add
+        // Then: the “trade/add” view is returned with the form empty
         mockMvc.perform(get("/trade/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/add"));
     }
 
 
-
-    // 3. Test de la méthode validate : valider et enregistrer un nouveau Trade
     @Test
     public void validateTrade_ShouldCreateTradeAndRedirectToList() throws Exception {
 
-        // When : on soumet un formulaire POST valide à /trade/validate
-        // Then : le service de création est appelé et la redirection vers /trade/list est effectuée
+        // When: a valid POST form is submitted to /trade/validate
+        // Then: the creation service is called and redirection to /trade/list is performed
         mockMvc.perform(post("/trade/validate")
                         .param("account", "ValidAccount")
                         .param("type", "ValidType")
@@ -93,13 +89,11 @@ public class TradeControllerTest {
     }
 
 
-
-    // 4. Test de la méthode validate : formulaire invalide => retour au formulaire d'ajout
     @Test
     public void validateTrade_WithValidationError_ShouldReturnAddForm() throws Exception {
 
-        // When : on soumet un formulaire POST invalide à /trade/validate (champ "account" vide)
-        // Then : le formulaire "trade/add" est renvoyé avec une erreur de validation
+        // When: an invalid POST form is submitted to /trade/validate (empty “account” field)
+        // Then: the “trade/add” form is returned with a validation error
         mockMvc.perform(post("/trade/validate")
                         .param("account", "")
                         .param("type", "ValidType")
@@ -110,12 +104,10 @@ public class TradeControllerTest {
     }
 
 
-
-    // 5. Test de la méthode showUpdateForm : afficher le formulaire de mise à jour
     @Test
     public void showUpdateForm_ShouldReturnTradeUpdateView() throws Exception {
 
-        // Given : un Trade existant retourné par le service
+        // Given : an existing Trade returned by the service
         Trade trade = new Trade();
         trade.setId(1);
         trade.setAccount("Account1");
@@ -123,8 +115,8 @@ public class TradeControllerTest {
 
         BDDMockito.given(service.getById(1)).willReturn(trade);
 
-        // When : on effectue une requête GET sur /trade/update/1
-        // Then : la vue "trade/update" est retournée avec l'objet Trade dans le modèle
+        // When: a GET request is made to /trade/update/1
+        // Then: the “trade/update” view is returned with the Trade object in the model
         mockMvc.perform(get("/trade/update/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/update"))
@@ -132,29 +124,25 @@ public class TradeControllerTest {
     }
 
 
-
-    // 6. Test showUpdateForm : id inexistant => redirection vers page d'erreur
     @Test
     public void showUpdateForm_WithInvalidId_ShouldRedirectToError() throws Exception {
 
-        // Given : le service renvoie une exception pour l'ID 999
+        // Given : The service returns an exception for ID 999.
         BDDMockito.given(service.getById(999)).willThrow(new IllegalArgumentException("Not found"));
 
-        // When : on effectue une requête GET sur /trade/update/999
-        // Then : redirection vers la page d’erreur
+        // When: a GET request is made to /trade/update/999
+        // Then: redirection to the error page
         mockMvc.perform(get("/trade/update/999"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
     }
 
 
-
-    // 7. Test de la méthode updateTrade : mettre à jour un Trade existant
     @Test
     public void updateTrade_ShouldUpdateTradeAndRedirectToList() throws Exception {
 
-        // When : on soumet un formulaire POST valide à /trade/update/1
-        // Then : la méthode update du service est appelée et la redirection est effectuée
+        // When: a valid POST form is submitted to /trade/update/1
+        // Then: the service's update method is called and redirection is performed
         mockMvc.perform(post("/trade/update/1")
                         .param("account", "UpdatedAccount")
                         .param("type", "UpdatedType")
@@ -166,13 +154,11 @@ public class TradeControllerTest {
     }
 
 
-
-    // 8. Test de la méthode updateTrade : erreur de validation => retour au formulaire
     @Test
     public void updateTrade_WithValidationError_ShouldReturnUpdateForm() throws Exception {
 
-        // When : on soumet un formulaire POST invalide (champ account vide)
-        // Then : le formulaire "trade/update" est renvoyé avec erreur de validation
+        // When: an invalid POST form is submitted (empty account field)
+        // Then: the “trade/update” form is returned with a validation error
         mockMvc.perform(post("/trade/update/1")
                         .param("account", "")
                         .param("type", "Type")
@@ -183,13 +169,11 @@ public class TradeControllerTest {
     }
 
 
-
-    // 9. Test de la méthode deleteTrade : suppression d'un Trade existant
     @Test
     public void deleteTrade_ShouldDeleteTradeAndRedirectToList() throws Exception {
 
-        // When : on effectue une requête GET sur /trade/delete/1
-        // Then : le Trade est supprimé et redirection vers /trade/list
+        // When: a GET request is made to /trade/delete/1
+        // Then: the trade is deleted and redirected to /trade/list
         mockMvc.perform(get("/trade/delete/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/trade/list"));
@@ -198,16 +182,14 @@ public class TradeControllerTest {
     }
 
 
-
-    // 10. Test deleteTrade : suppression échoue car ID inexistant
     @Test
     public void deleteTrade_WithUnknownId_ShouldRedirectToError() throws Exception {
 
-        // Given : suppression échoue car ID inexistant
+        // Given : Deletion fails because ID does not exist
         BDDMockito.willThrow(new IllegalArgumentException("Not found")).given(service).delete(999);
 
-        // When : on effectue une requête GET sur /trade/delete/999
-        // Then : redirection vers la page d'erreur
+        // When: a GET request is made to /trade/delete/999
+        // Then: redirection to the error page
         mockMvc.perform(get("/trade/delete/999"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));

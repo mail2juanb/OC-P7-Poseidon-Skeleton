@@ -37,11 +37,11 @@ public class RatingControllerTest {
 
 
 
-    // 1. Test de la méthode home : récupérer et afficher la liste des Ratings
+
     @Test
     public void home_ShouldReturn200AndRatingListView() throws Exception {
 
-        // Given : une liste de Rating simulée renvoyée par le service
+        // Given : a simulated rating list returned by the service
         Rating rating1 = new Rating();
         rating1.setId(1);
         rating1.setMoodysRating("Aaa");
@@ -60,35 +60,33 @@ public class RatingControllerTest {
 
         BDDMockito.given(service.getAll()).willReturn(ratings);
 
-        // When : on effectue une requête GET sur /rating/list
-        // Then : la vue "rating/list" est retournée avec une liste contenant 2 éléments
+        // When: a GET request is made to /rating/list
+        // Then: the “rating/list” view is returned with a list containing 2 items
         mockMvc.perform(get("/rating/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/list"))
-                .andExpect(model().attribute("ratings", hasSize(2)));  // Vérifie la taille de la liste
+                .andExpect(model().attribute("ratings", hasSize(2)));
     }
 
 
-
-    // 2. Test de la méthode addRatingForm : afficher le formulaire d'ajout de Rating
     @Test
     public void addRatingForm_ShouldReturn200AndAddView() throws Exception {
 
-        // Given : l'utilisateur souhaite ajouter un nouveau Rating
-        // When : on effectue une requête GET sur /rating/add
-        // Then : la vue "rating/add" est retournée avec un formulaire vide
+        // Given: the user wants to add a new rating
+        // When: a GET request is made to /rating/add
+        // Then: the “rating/add” view is returned with an empty form
         mockMvc.perform(get("/rating/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/add"));
     }
 
-    // 3. Test de la méthode validate : soumettre un formulaire valide pour ajouter un Rating
+
     @Test
     public void validate_ShouldReturn302AndRedirectToList() throws Exception {
 
-        // Given : un formulaire avec des données valides pour un Rating
-        // When : on effectue une requête POST sur /rating/validate
-        // Then : la requête redirige vers la page de liste des Ratings
+        // Given: a form with valid data for a Rating
+        // When: a POST request is made to /rating/validate
+        // Then: the request redirects to the Ratings list page
         mockMvc.perform(post("/rating/validate")
                         .param("moodysRating", "Aaa")
                         .param("sandPRating", "Aa")
@@ -97,22 +95,20 @@ public class RatingControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/rating/list"));
 
-        verify(service).create(any(Rating.class)); // Vérifie que la création a été effectuée
+        verify(service).create(any(Rating.class));
     }
 
 
-
-    // 4. Test de la méthode validate : soumettre un formulaire invalide pour ajouter un Rating
     @Test
     public void validate_WithValidationError_ShouldReturn200AndAddView() throws Exception {
 
-        // Given : un formulaire avec un champ "moodysRating" trop grand
-        String longMoodysRating = "A".repeat(126); // 126 caractères pour dépasser la limite de 125
+        // Given : a form with a “moodysRating” field that is too large
+        String longMoodysRating = "A".repeat(126);
 
-        // When : on effectue une requête POST sur /rating/validate avec des données invalides
-        // Then : la vue "rating/add" est retournée avec une erreur sur le champ "moodysRating"
+        // When: a POST request is made to /rating/validate with invalid data
+        // Then: the “rating/add” view is returned with an error on the “moodysRating” field
         mockMvc.perform(post("/rating/validate")
-                        .param("moodysRating", longMoodysRating)  // champ trop grand = erreur de validation
+                        .param("moodysRating", longMoodysRating)
                         .param("sandPRating", "Aa")
                         .param("fitchRating", "A")
                         .param("orderNumber", "1"))
@@ -122,12 +118,10 @@ public class RatingControllerTest {
     }
 
 
-
-    // 5. Test de la méthode showUpdateForm : afficher le formulaire de mise à jour pour un Rating existant
     @Test
     public void showUpdateForm_ShouldReturn200AndUpdateView() throws Exception {
 
-        // Given : un Rating existant avec un ID valide
+        // Given : an existing Rating with a valid ID
         Integer id = 1;
         Rating rating = new Rating();
         rating.setId(id);
@@ -138,8 +132,8 @@ public class RatingControllerTest {
 
         BDDMockito.given(service.getById(id)).willReturn(rating);
 
-        // When : on effectue une requête GET sur /rating/update/{id} avec un ID valide
-        // Then : la vue "rating/update" est retournée avec les données du Rating à mettre à jour
+        // When: a GET request is made to /rating/update/{id} with a valid ID
+        // Then: the “rating/update” view is returned with the Rating data to be updated
         mockMvc.perform(get("/rating/update/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/update"))
@@ -147,33 +141,29 @@ public class RatingControllerTest {
     }
 
 
-
-    // 6. Test de la méthode showUpdateForm : afficher une erreur si l'ID du Rating est inconnu
     @Test
     public void showUpdateForm_WithUnknownId_ShouldRedirectToError() throws Exception {
 
-        // Given : un ID de Rating inexistant
+        // Given : a non-existent Rating ID
         Integer id = 999;
         BDDMockito.given(service.getById(id)).willThrow(new IllegalArgumentException("Not found"));
 
-        // When : on effectue une requête GET sur /rating/update/{id} avec un ID inconnu
-        // Then : la requête redirige vers la page d'erreur
+        // When: a GET request is made to /rating/update/{id} with an unknown ID
+        // Then: the request redirects to the error page
         mockMvc.perform(get("/rating/update/{id}", id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
     }
 
 
-
-    // 7. Test de la méthode update : soumettre un formulaire valide pour mettre à jour un Rating
     @Test
     public void update_ShouldReturn302AndRedirectToList() throws Exception {
 
-        // Given : un formulaire valide pour mettre à jour un Rating avec un ID
+        // Given: a valid form to update a Rating with an ID
         Integer id = 1;
 
-        // When : on effectue une requête POST sur /rating/update/{id} avec des données valides
-        // Then : la requête redirige vers la page de liste des Ratings
+        // When: a POST request is made to /rating/update/{id} with valid data
+        // Then: the request redirects to the Ratings list page
         mockMvc.perform(post("/rating/update/{id}", id)
                         .param("moodysRating", "Aaa")
                         .param("sandPRating", "Aa")
@@ -182,23 +172,21 @@ public class RatingControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/rating/list"));
 
-        verify(service).update(any(Rating.class)); // Vérifie que la mise à jour a été effectuée
+        verify(service).update(any(Rating.class));
     }
 
 
-
-    // 8. Test de la méthode update : soumettre un formulaire invalide pour mettre à jour un Rating
     @Test
     public void update_WithValidationError_ShouldReturn200AndUpdateView() throws Exception {
 
-        // Given : un formulaire invalide pour mettre à jour un Rating avec un champ "moodysRating" trop grand
+        // Given: an invalid form for updating a Rating with a “moodysRating” field that is too large
         Integer id = 1;
-        String longMoodysRating = "A".repeat(126); // 126 caractères pour dépasser la limite de 125
+        String longMoodysRating = "A".repeat(126);
 
-        // When : on effectue une requête POST sur /rating/update/{id} avec des données invalides
-        // Then : la vue "rating/update" est retournée avec une erreur sur le champ "moodysRating"
+        // When: a POST request is made to /rating/update/{id} with invalid data
+        // Then: the “rating/update” view is returned with an error on the “moodysRating” field
         mockMvc.perform(post("/rating/update/{id}", id)
-                        .param("moodysRating", longMoodysRating)  // champ trop grand = erreur
+                        .param("moodysRating", longMoodysRating)
                         .param("sandPRating", "Aa")
                         .param("fitchRating", "A")
                         .param("orderNumber", "1"))
@@ -208,35 +196,31 @@ public class RatingControllerTest {
     }
 
 
-
-    // 9. Test de la méthode delete : supprimer un Rating existant
     @Test
     public void delete_ShouldReturn302AndRedirectToList() throws Exception {
 
-        // Given : un ID valide pour supprimer un Rating
+        // Given: a valid ID to delete a Rating
         Integer id = 1;
 
-        // When : on effectue une requête GET sur /rating/delete/{id} pour supprimer le Rating
-        // Then : la requête redirige vers la page de liste des Ratings
+        // When: a GET request is made to /rating/delete/{id} to delete the Rating
+        // Then: the request redirects to the Ratings list page
         mockMvc.perform(get("/rating/delete/{id}", id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/rating/list"));
 
-        verify(service).delete(id); // Vérifie que la suppression a été effectuée
+        verify(service).delete(id);
     }
 
 
-
-    // 10. Test de la méthode delete : tenter de supprimer un Rating inexistant
     @Test
     public void delete_WithUnknownId_ShouldRedirectToError() throws Exception {
 
-        // Given : un ID de Rating inexistant
+        // Given : a non-existent Rating ID
         Integer unknownId = 999;
         BDDMockito.willThrow(new IllegalArgumentException("Not found")).given(service).delete(unknownId);
 
-        // When : on effectue une requête GET sur /rating/delete/{id} pour supprimer un Rating inexistant
-        // Then : la requête redirige vers la page d'erreur
+        // When: a GET request is made to /rating/delete/{id} to delete a non-existent rating.
+        // Then: the request redirects to the error page.
         mockMvc.perform(get("/rating/delete/{id}", unknownId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));

@@ -8,6 +8,7 @@ public class BidListDomainTest {
 
     @Test
     void update_shouldUpdateFieldsFromGivenBidList() {
+
         // Given an existing BidList
         BidList bidList = new BidList();
         bidList.setId(1);
@@ -17,7 +18,7 @@ public class BidListDomainTest {
 
         // And a BidList with new values
         BidList updated = new BidList();
-        updated.setId(2);
+        updated.setId(1);
         updated.setAccount("Account-Updated");
         updated.setType("Type-Updated");
         updated.setBidQuantity(99.9);
@@ -26,7 +27,7 @@ public class BidListDomainTest {
         bidList.update(updated);
 
         // Then only the expected fields are updated
-        //assertEquals(updated.getId(), bidList.getId());
+        assertEquals(updated.getId(), bidList.getId());
         assertEquals("Account-Updated", bidList.getAccount());
         assertEquals("Type-Updated", bidList.getType());
         assertEquals(99.9, bidList.getBidQuantity());

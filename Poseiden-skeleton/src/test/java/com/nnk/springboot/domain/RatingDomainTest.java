@@ -8,6 +8,7 @@ public class RatingDomainTest {
 
     @Test
     void update_shouldUpdateFieldsFromGivenRating() {
+
         // Given an original Rating
         Rating original = new Rating();
         original.setId(1);
@@ -18,7 +19,7 @@ public class RatingDomainTest {
 
         // And a Rating with new values
         Rating updated = new Rating();
-        updated.setId(2);
+        updated.setId(1);
         updated.setMoodysRating("Moody-B");
         updated.setSandPRating("S&P-B");
         updated.setFitchRating("Fitch-B");
@@ -28,7 +29,7 @@ public class RatingDomainTest {
         original.update(updated);
 
         // Then the original Rating is updated with values from updated
-        //assertEquals(updated.getId(), original.getId());
+        assertEquals(updated.getId(), original.getId());
         assertEquals(updated.getMoodysRating(), original.getMoodysRating());
         assertEquals(updated.getSandPRating(), original.getSandPRating());
         assertEquals(updated.getFitchRating(), original.getFitchRating());

@@ -8,6 +8,7 @@ public class TradeDomainTest {
 
     @Test
     void update_shouldUpdateAccountTypeAndBuyQuantityOnly() {
+
         // Given an initial Trade
         Trade original = new Trade();
         original.setId(1);
@@ -19,6 +20,7 @@ public class TradeDomainTest {
 
         // And a new Trade with different values
         Trade updated = new Trade();
+        updated.setId(1);
         updated.setAccount("UpdatedAccount");
         updated.setType("UpdatedType");
         updated.setBuyQuantity(99.9);
@@ -34,6 +36,7 @@ public class TradeDomainTest {
         assertEquals(99.9, original.getBuyQuantity());
 
         // And the other fields remain unchanged
+        assertEquals(updated.getId(), original.getId());
         assertEquals(5.0, original.getSellQuantity());
         assertEquals("ABC", original.getSecurity());
     }

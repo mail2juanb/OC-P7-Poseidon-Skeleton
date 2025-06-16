@@ -25,9 +25,6 @@ public class TradeServiceTest extends AbstractCrudServiceTest<Trade> {
     protected Trade createModelWithId(int id) {
         Trade trade = mock(Trade.class);
         lenient().when(trade.getId()).thenReturn(id);
-        //Trade trade = new Trade();
-        //trade.setId(id);
-        //trade.setAccount("Test");
         return trade;
     }
 

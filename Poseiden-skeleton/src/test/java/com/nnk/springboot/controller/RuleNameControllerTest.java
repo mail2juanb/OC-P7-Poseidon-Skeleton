@@ -33,14 +33,14 @@ public class RuleNameControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private AbstractCrudService<RuleName> service;  // Mock du service
+    private AbstractCrudService<RuleName> service;
 
 
-    // 1. Test de la méthode home : récupérer et afficher la liste des RuleNames
+
     @Test
     public void home_ShouldReturn200AndRuleNameListView() throws Exception {
 
-        // Given : une liste de RuleNames simulée renvoyée par le service
+        // Given : a simulated list of RuleNames returned by the service
         RuleName rule1 = new RuleName();
         rule1.setId(1);
         rule1.setName("Rule 1");
@@ -63,31 +63,30 @@ public class RuleNameControllerTest {
 
         BDDMockito.given(service.getAll()).willReturn(ruleNames);
 
-        // When : on effectue une requête GET sur /ruleName/list
-        // Then : la vue "ruleName/list" est retournée avec une liste contenant 2 éléments
+        // When: a GET request is made to /ruleName/list
+        // Then: the “ruleName/list” view is returned with a list containing 2 items
         mockMvc.perform(get("/ruleName/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/list"))
-                .andExpect(model().attribute("ruleNames", hasSize(2)));  // Vérifie la taille de la liste
+                .andExpect(model().attribute("ruleNames", hasSize(2)));
     }
 
 
-    // 2. Test de la méthode addRuleForm : afficher le formulaire d'ajout
     @Test
     public void addRuleForm_ShouldReturn200AndRuleNameAddView() throws Exception {
 
-        // When : on effectue une requête GET sur /ruleName/add
-        // Then : la vue "ruleName/add" est retournée sans erreur
+        // When: a GET request is made to /ruleName/add
+        // Then: the “ruleName/add” view is returned without error
         mockMvc.perform(get("/ruleName/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/add"));
     }
 
-    // 3.1 Test de la méthode validate : valider le formulaire d'ajout et rediriger vers la liste
+
     @Test
     public void validateRuleName_ShouldReturn302AndRuleNameListView() throws Exception {
 
-        // Given : un objet RuleName valide avec tous les champs requis
+        // Given: a valid RuleName object with all required fields
         RuleName rule = new RuleName();
         rule.setId(null);
         rule.setName("Rule 1");
@@ -97,8 +96,8 @@ public class RuleNameControllerTest {
         rule.setSqlStr("SQL 1");
         rule.setSqlPart("SQL Part 1");
 
-        // When : on effectue une requête POST valide vers /ruleName/validate
-        // Then : une redirection vers /ruleName/list est attendue et le service est appelé
+        // When: a valid POST request is made to /ruleName/validate
+        // Then: a redirection to /ruleName/list is expected and the service is called
         mockMvc.perform(post("/ruleName/validate")
                         .param("name", rule.getName())
                         .param("description", rule.getDescription())
@@ -109,21 +108,20 @@ public class RuleNameControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/ruleName/list"));
 
-        verify(service).create(any(RuleName.class));  // Vérifie que la méthode create a été appelée
+        verify(service).create(any(RuleName.class));
     }
 
 
-    // 3.2 Test de la méthode validate : soumettre un formulaire invalide et revenir au formulaire d'ajout
     @Test
     public void validateRuleName_WithValidationError_ShouldReturn200AndRuleNameAddView() throws Exception {
 
-        // Given : un champ obligatoire (name) est trop grand
-        String longName = "A".repeat(126); // 126 caractères pour dépasser la limite de 125
+        // Given: a required field (name) is too large
+        String longName = "A".repeat(126);
 
-        // When : on soumet le formulaire avec une erreur de validation
-        // Then : la vue "ruleName/add" est affichée et l’erreur est attachée au modèle
+        // When: the form is submitted with a validation error
+        // Then: the “ruleName/add” view is displayed and the error is attached to the model
         mockMvc.perform(post("/ruleName/validate")
-                        .param("name", longName)  // Champ trop long pour déclencher une erreur
+                        .param("name", longName)
                         .param("description", "Description 1")
                         .param("json", "{}")
                         .param("template", "Template 1")
@@ -135,11 +133,10 @@ public class RuleNameControllerTest {
     }
 
 
-    // 4.1 Test de la méthode showUpdateForm : afficher le formulaire de mise à jour
     @Test
     public void showUpdateForm_ShouldReturn200AndRuleNameUpdateView() throws Exception {
 
-        // Given : un RuleName existant avec un ID donné
+        // Given: an existing RuleName with a given ID
         Integer id = 1;
 
         RuleName rule = new RuleName();
@@ -153,35 +150,33 @@ public class RuleNameControllerTest {
 
         BDDMockito.given(service.getById(id)).willReturn(rule);
 
-        // When : on effectue une requête GET sur /ruleName/update/{id}
-        // Then : la vue "ruleName/update" est affichée avec l’objet attendu dans le modèle
+        // When: a GET request is made to /ruleName/update/{id}
+        // Then: the “ruleName/update” view is displayed with the expected object in the model
         mockMvc.perform(get("/ruleName/update/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/update"))
-                .andExpect(model().attribute("ruleName", hasProperty("id", is(id))));  // Vérifie l'ID du RuleName
+                .andExpect(model().attribute("ruleName", hasProperty("id", is(id))));
     }
 
 
-    // 4.2 Test de la méthode showUpdateForm : l’ID fourni ne correspond à aucun RuleName existant
     @Test
     public void showUpdateForm_WithUnknownId_ShouldReturn302AndRedirectToErrorPage() throws Exception {
 
-        // Given : aucun RuleName trouvé, déclenchement d'une exception
+        // Given: no RuleName found, exception triggered
         Integer unknownId = 999;
         BDDMockito.given(service.getById(unknownId)).willThrow(new IllegalArgumentException("RuleName not found"));
 
-        // When / Then : l'utilisateur est redirigé vers /error
+        // When / Then: the user is redirected to /error
         mockMvc.perform(get("/ruleName/update/{id}", unknownId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
     }
 
 
-    // 5.1 Test de la méthode updateRuleName : valider le formulaire de mise à jour et rediriger vers la liste
     @Test
     public void updateRuleName_ShouldReturn302AndShowRuleNameListView() throws Exception {
 
-        // Given : un objet RuleName valide pour la mise à jour
+        // Given: a valid RuleName object for the update
         Integer id = 1;
         RuleName rule = new RuleName();
         rule.setId(id);
@@ -192,8 +187,8 @@ public class RuleNameControllerTest {
         rule.setSqlStr("Updated SQL");
         rule.setSqlPart("Updated SQL Part");
 
-        // When : on effectue une requête POST sur /ruleName/update/{id} avec des données valides
-        // Then : une redirection vers /ruleName/list est attendue et le service est appelé
+        // When: a POST request is made to /ruleName/update/{id} with valid data
+        // Then: a redirection to /ruleName/list is expected and the service is called
         mockMvc.perform(post("/ruleName/update/{id}", id)
                         .param("name", rule.getName())
                         .param("description", rule.getDescription())
@@ -204,20 +199,19 @@ public class RuleNameControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/ruleName/list"));
 
-        verify(service).update(any(RuleName.class));  // Vérifie que la méthode update a été appelée
+        verify(service).update(any(RuleName.class));
     }
 
 
-    // 5.2 Test de la méthode updateRuleName : soumettre un formulaire invalide de mise à jour
     @Test
     public void updateRuleName_WithValidationErrors_ShouldReturn200AndRuleNameUpdateView() throws Exception {
 
-        // Given : un champ obligatoire (name) est trop grand
+        // Given: a required field (name) is too large
         Integer id = 1;
-        String longName = "A".repeat(126); // 126 caractères pour dépasser la limite de 125
+        String longName = "A".repeat(126);
 
-        // When : on effectue une requête POST invalide sur /ruleName/update/{id}
-        // Then : la vue "ruleName/update" est affichée et l’erreur de validation est détectée
+        // When: an invalid POST request is made to /ruleName/update/{id}
+        // Then: the “ruleName/update” view is displayed and the validation error is detected
         mockMvc.perform(post("/ruleName/update/{id}", id)
                         .param("name", longName)
                         .param("description", "Updated Description")
@@ -225,17 +219,16 @@ public class RuleNameControllerTest {
                         .param("template", "Updated Template")
                         .param("sqlStr", "Updated SQL")
                         .param("sqlPart", "Updated SQL Part"))
-                .andExpect(status().isOk()) // Pas de redirection car erreur de validation
+                .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/update"))
                 .andExpect(model().attributeHasFieldErrors("ruleName", "name"));
     }
 
 
-    // 6.1 Test de la méthode delete : supprimer un RuleName et rediriger vers la liste
     @Test
     public void deleteRuleName_ShouldReturn302AndShowRuleNameListView() throws Exception {
 
-        // Given : un RuleName à supprimer
+        // Given : a RuleName to be deleted
         Integer id = 1;
         RuleName rule = new RuleName();
         rule.setId(id);
@@ -246,13 +239,13 @@ public class RuleNameControllerTest {
         rule.setSqlStr("SQL 1");
         rule.setSqlPart("SQL Part 1");
 
-        // When : on effectue une requête GET sur /ruleName/delete/{id}
-        // Then : une redirection vers /ruleName/list est attendue et le service est appelé
+        // When: a GET request is made to /ruleName/delete/{id}
+        // Then: a redirection to /ruleName/list is expected and the service is called
         mockMvc.perform(get("/ruleName/delete/{id}", id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/ruleName/list"));
 
-        verify(service).delete(id);  // Vérifie que la méthode delete a été appelée
+        verify(service).delete(id);
     }
 
 }

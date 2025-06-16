@@ -41,7 +41,6 @@ public class TradeController {
     public String home(Model model) {
 
         final List<Trade> trades = service.getAll();
-        log.debug("List of Trade found : {}", trades);
         model.addAttribute("trades", trades);
 
         return "trade/list";
@@ -72,15 +71,6 @@ public class TradeController {
     @PostMapping("/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
 
-        // NOTE: check data valid and save to db, after saving return Trade list
-        // Check Account            = @NotBlank / @Size(max = 30)
-        // Check Type               = @NotBlank / @Size(max = 30)
-        // Check Buy Quantity       =
-
-        log.debug("Trade account = {}", trade.getAccount());
-        log.debug("Trade type = {}", trade.getType());
-        log.debug("Trade Buy Quantity = {}", trade.getBuyQuantity());
-
         if (hasValidationErrors(trade, result, model)) {
             return "trade/add";
         }
@@ -102,7 +92,6 @@ public class TradeController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
         final Trade trade = service.getById(id);
-        log.debug("Trade with id {} = {}", id, trade);
         model.addAttribute("trade", trade);
 
         return "trade/update";
@@ -123,19 +112,13 @@ public class TradeController {
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result, Model model) {
 
-        // NOTE: check required fields, if valid call service to update Trade and return Trade list
-        // Check Account            = @NotBlank / @Size(max = 30)
-        // Check Type               = @NotBlank / @Size(max = 30)
-        // Check Buy Quantity       = none
-
         if (hasValidationErrors(trade, result, model)) {
             return "trade/update";
         }
 
         service.update(trade);
-        log.debug("Update Trade with id {} = {}", id, trade);
-        return "redirect:/trade/list";
 
+        return "redirect:/trade/list";
     }
 
 
@@ -149,7 +132,6 @@ public class TradeController {
     @GetMapping("/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
 
-        log.info("Delete Trade with id {}", id);
         service.delete(id);
 
         return "redirect:/trade/list";
@@ -169,13 +151,11 @@ public class TradeController {
     private boolean hasValidationErrors(Trade trade, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
             model.addAttribute("trade", trade);
             return true;
         }
 
         return false;
-
     }
 
 }

@@ -41,7 +41,6 @@ public class RatingController {
     public String home(Model model) {
 
         final List<Rating> ratings = service.getAll();
-        log.debug("List of Rating found : {}", ratings);
         model.addAttribute("ratings", ratings);
 
         return "rating/list";
@@ -72,17 +71,6 @@ public class RatingController {
     @PostMapping("/validate")
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
 
-        // NOTE: check data valid and save to db, after saving return Rating list
-        // Check moodysRating            = @Size(max = 125)
-        // Check sandPRating             = @Size(max = 125)
-        // Check fitchRating             = @Size(max = 125)
-        // Check orderNumber             = @Min -128 / @Max 127
-
-        log.debug("Rating moodysRating = {}", rating.getMoodysRating());
-        log.debug("Rating sandPRating = {}", rating.getSandPRating());
-        log.debug("Rating fitchRating = {}", rating.getFitchRating());
-        log.debug("Rating orderNumber = {}", rating.getOrderNumber());
-
         if (hasValidationErrors(rating, result, model)) {
             return "rating/add";
         }
@@ -105,7 +93,6 @@ public class RatingController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
         final Rating rating = service.getById(id);
-        log.debug("Rating with id {} = {}", id, rating);
         model.addAttribute("rating", rating);
 
         return "rating/update";
@@ -126,18 +113,11 @@ public class RatingController {
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                              BindingResult result, Model model) {
 
-        // NOTE: check required fields, if valid call service to update Rating and return Rating list
-        // Check moodysRating            = @Size(max = 125)
-        // Check sandPRating             = @Size(max = 125)
-        // Check fitchRating             = @Size(max = 125)
-        // Check orderNumber             = @Min -128 / @Max 127
-
         if (hasValidationErrors(rating, result, model)) {
             return "rating/update";
         }
 
         service.update(rating);
-        log.debug("Update Rating with id {} = {}", id, rating);
 
         return "redirect:/rating/list";
 
@@ -154,7 +134,6 @@ public class RatingController {
     @GetMapping("/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
 
-        log.info("Delete Rating with id {}", id);
         service.delete(id);
 
         return "redirect:/rating/list";
@@ -174,7 +153,6 @@ public class RatingController {
     private boolean hasValidationErrors(Rating rating, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
             model.addAttribute("rating", rating);
             return true;
         }

@@ -41,7 +41,6 @@ public class CurvePointController {
     public String home(Model model) {
 
         final List<CurvePoint> curvePoints = service.getAll();
-        log.debug("List of curvePoint found : {}", curvePoints);
         model.addAttribute("curvePoints", curvePoints);
 
         return "curvePoint/list";
@@ -72,15 +71,6 @@ public class CurvePointController {
     @PostMapping("/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
 
-        // NOTE: check data valid and save to db, after saving return Curve list
-        // Check CurveId            = @Min -128 / @Max 127 / @NotNull
-        // Check Term               = none
-        // Check Value              = none
-
-        log.debug("CurvePoint curveId = {}", curvePoint.getCurveId());
-        log.debug("CurvePoint term = {}", curvePoint.getTerm());
-        log.debug("CurvePoint value = {}", curvePoint.getValue());
-
         if (hasValidationErrors(curvePoint, result, model)) {
             return "curvePoint/add";
         }
@@ -103,7 +93,6 @@ public class CurvePointController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
         final CurvePoint curvePoint = service.getById(id);
-        log.debug("CurvePoint with id {} = {}", id, curvePoint);
         model.addAttribute("curvePoint", curvePoint);
 
         return "curvePoint/update";
@@ -124,17 +113,11 @@ public class CurvePointController {
     public String updateCurvePoint(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
                              BindingResult result, Model model) {
 
-        // NOTE: check required fields, if valid call service to update Curve and return Curve list
-        // Check CurveId            = @Min -128 / @Max 127 / @NotNull
-        // Check Term               = none
-        // Check Value              = none
-
         if (hasValidationErrors(curvePoint, result, model)) {
             return "curvePoint/update";
         }
 
         service.update(curvePoint);
-        log.debug("Update CurvePoint with id {} = {}", id, curvePoint);
 
         return "redirect:/curvePoint/list";
     }
@@ -150,7 +133,6 @@ public class CurvePointController {
     @GetMapping("/delete/{id}")
     public String deleteCurvePoint(@PathVariable("id") Integer id, Model model) {
 
-        log.info("Delete CurvePoint with id {}", id);
         service.delete(id);
 
         return "redirect:/curvePoint/list";
@@ -171,7 +153,6 @@ public class CurvePointController {
     private boolean hasValidationErrors(CurvePoint curvePoint, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
             model.addAttribute("curvePoint", curvePoint);
             return true;
         }

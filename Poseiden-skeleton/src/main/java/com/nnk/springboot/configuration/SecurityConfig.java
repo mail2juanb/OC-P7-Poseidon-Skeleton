@@ -62,20 +62,20 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/bidList/list")
-                        .failureUrl("/home?error")  // <- redirection en cas d’échec
+                        .failureUrl("/home?error")
                         .permitAll()
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/logout")                       // <- personnalisée ici
-                        .logoutSuccessUrl("/home?logout")          // <- redirection après logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/home?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
 
                 .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/403") // Redirection vers page 403 personnalisée
+                        .accessDeniedPage("/403")
                 )
 
                 .sessionManagement(session -> session

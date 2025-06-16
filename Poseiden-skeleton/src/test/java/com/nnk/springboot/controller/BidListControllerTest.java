@@ -26,21 +26,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BidListController.class)
-@AutoConfigureMockMvc(addFilters = false) // <--- désactive les filtres Spring Security
+@AutoConfigureMockMvc(addFilters = false)
 public class BidListControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private AbstractCrudService<BidList> service;  // Mock de la dépendance service
+    private AbstractCrudService<BidList> service;
 
 
-    // 1. Test de la méthode home : récupérer et afficher la liste des BidList
+
     @Test
     public void home_ShouldReturn200AndBidListListView() throws Exception {
 
-        // Given : une liste de bidList simulée renvoyée par le service
+        // Given : a simulated bidList returned by the service
         BidList bid1 = new BidList();
         bid1.setId(1);
         bid1.setAccount("Account1");
@@ -57,23 +57,23 @@ public class BidListControllerTest {
 
         BDDMockito.given(service.getAll()).willReturn(bidLists);
 
-        // When : on effectue une requête GET sur /bidList/list
-        // Then : la vue "bidList/list" est retournée avec une liste contenant 2 éléments
+        // When : We perform a GET request on /bidList/list.
+        // Then : The “bidList/list” view is returned with a list containing two items.
         mockMvc.perform(get("/bidList/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/list"))
-                .andExpect(model().attribute("bidLists", hasSize(2)));  // Vérifie la taille de la liste
+                .andExpect(model().attribute("bidLists", hasSize(2)));
 
     }
 
 
 
-    // 2. Test de la méthode addBidForm : afficher le formulaire d'ajout
+
     @Test
     public void addBidForm_ShouldReturn200AndBidListAddView() throws Exception {
 
-        // When : on effectue une requête GET sur /bidList/add
-        // Then : la vue "bidList/add" est retournée sans erreur
+        // When : We perform a GET request on /bidList/add.
+        // Then : The “bidList/add” view is returned without error.
         mockMvc.perform(get("/bidList/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/add"));
@@ -81,19 +81,19 @@ public class BidListControllerTest {
 
 
 
-    // 3.1 Test de la méthode validate : valider le formulaire d'ajout et rediriger vers la liste
+
     @Test
     public void validateBid_ShouldReturn302AndBidListListView() throws Exception {
 
-        // Given : un objet BidList valide avec tous les champs requis
+        // Given : a valid BidList object with all required fields
         BidList bid = new BidList();
         bid.setId(null);
         bid.setAccount("Account1");
         bid.setType("Type1");
         bid.setBidQuantity(100.0);
 
-        // When : on effectue une requête POST valide vers /bidList/validate
-        // Then : une redirection vers /bidList/list est attendue et le service est appelé
+        // When : We make a valid POST request to /bidList/validate.
+        // Then : A redirect to /bidList/list is expected and the service is called.
         mockMvc.perform(post("/bidList/validate")
                         .param("account", bid.getAccount())
                         .param("type", bid.getType())
@@ -102,34 +102,34 @@ public class BidListControllerTest {
                 .andExpect(redirectedUrl("/bidList/list"));
 
 
-        verify(service).create(any(BidList.class));  // Vérifie que la méthode create a été appelée
+        verify(service).create(any(BidList.class));
     }
 
 
 
-    // 3.2 Test de la méthode validate : soumettre un formulaire invalide et revenir au formulaire d'ajout
+
     @Test
     public void validateBid_WithValidationError_ShouldReturn200AndBidListAddView() throws Exception {
 
-        // Given : un champ obligatoire (account) est vide
-        // When : on soumet le formulaire avec une erreur de validation
-        // Then : la vue "bidList/add" est affichée et l’erreur est attachée au modèle
+        // Given : A required field (account) is empty.
+        // When : the form is submitted with a validation error
+        // Then : The “bidList/add” view is displayed and the error is attached to the model.
         mockMvc.perform(post("/bidList/validate")
                         .param("account", "")  // Champ vide pour déclencher une erreur
                         .param("type", "Type1")
                         .param("bidQuantity", "100.0"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/add"))
-                .andExpect(model().attributeHasFieldErrors("bidList", "account"));;
+                .andExpect(model().attributeHasFieldErrors("bidList", "account"));
     }
 
 
 
-    // 4.1 Test de la méthode showUpdateForm : afficher le formulaire de mise à jour
+
     @Test
     public void showUpdateForm_ShouldReturn200AndBidListUpdateView() throws Exception {
 
-        // Given : un BidList existant avec un ID donné
+        // Given : an existing BidList with a given ID
         Integer id = 1;
 
         BidList bidList = new BidList();
@@ -140,8 +140,8 @@ public class BidListControllerTest {
 
         BDDMockito.given(service.getById(id)).willReturn(bidList);
 
-        // When : on effectue une requête GET sur /bidList/update/{id}
-        // Then : la vue "bidList/update" est affichée avec l’objet attendu dans le modèle
+        // When : We perform a GET request on /bidList/update/{id}
+        // Then : The “bidList/update” view is displayed with the expected object in the model.
         mockMvc.perform(get("/bidList/update/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/update"))
@@ -150,15 +150,15 @@ public class BidListControllerTest {
 
 
 
-    // 4.2 Test de la méthode showUpdateForm : l’ID fourni ne correspond à aucun BidList existant
+
     @Test
     public void showUpdateForm_WithUnknownId_ShouldReturn302AndRedirectToErrorPage() throws Exception {
 
-        // Given : aucun BidList trouvé, déclenchement d'une exception
+        // Given : No BidList found, exception triggered
         Integer unknownId = 999;
         BDDMockito.given(service.getById(unknownId)).willThrow(new IllegalArgumentException("BidList not found"));
 
-        // When / Then : l'utilisateur est redirigé vers /error
+        // When / Then : The user is redirected to /error.
         mockMvc.perform(get("/bidList/update/{id}", unknownId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
@@ -166,11 +166,11 @@ public class BidListControllerTest {
 
 
 
-    // 5.1 Test de la méthode updateBid : valider le formulaire de mise à jour et rediriger vers la liste
+
     @Test
     public void updateBid_ShouldReturn302AndShowBidListListView() throws Exception {
 
-        // Given : un objet BidList valide pour la mise à jour
+        // Given : A valid BidList object for the update
         Integer id = 1;
         BidList bidList = new BidList();
         bidList.setId(id);
@@ -178,8 +178,8 @@ public class BidListControllerTest {
         bidList.setType("UpdatedType");
         bidList.setBidQuantity(150.0);
 
-        // When : on effectue une requête POST sur /bidList/update/{id} avec des données valides
-        // Then : une redirection vers /bidList/list est attendue et le service est appelé
+        // When : We perform a POST request on /bidList/update/{id} with valid data.
+        // Then : A redirect to /bidList/list is expected and the service is called.
         mockMvc.perform(post("/bidList/update/{id}", id)
                         .param("account", bidList.getAccount())
                         .param("type", bidList.getType())
@@ -187,20 +187,20 @@ public class BidListControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bidList/list"));
 
-        verify(service).update(any(BidList.class));  // Vérifie que la méthode update a été appelée
+        verify(service).update(any(BidList.class));
     }
 
 
 
-    // 5.2 Test de la méthode updateBid : soumettre un formulaire invalide de mise à jour
+
     @Test
     public void updateBid_WithValidationErrors_ShouldReturn200AndBidListUpdateView() throws Exception {
 
-        // Given : un champ obligatoire (account) est vide
+        // Given : A required field (account) is empty.
         Integer id = 1;
 
-        // When : on effectue une requête POST invalide sur /bidList/update/{id}
-        // Then : la vue "bidList/update" est affichée et l’erreur de validation est détectée
+        // When : An invalid POST request is made to /bidList/update/{id}.
+        // Then : The “bidList/update” view is displayed and the validation error is detected.
         mockMvc.perform(post("/bidList/update/{id}", id)
                         .param("account", "")
                         .param("type", "Type1")
@@ -212,33 +212,33 @@ public class BidListControllerTest {
 
 
 
-    // 6.1 Test de la méthode deleteBid : supprimer un BidList et rediriger vers la liste
+
     @Test
     public void deleteBid_ShouldReturn302AndShowBidListListView() throws Exception {
 
-        // Given : un ID existant
+        // Given : an existing ID
         Integer id = 1;
 
-        // When : on effectue une requête GET sur /bidList/delete/{id}
-        // Then : une redirection vers /bidList/list est attendue et la suppression est invoquée
+        // When : We perform a GET request on /bidList/delete/{id}
+        // Then : A redirect to /bidList/list is expected, and deletion is invoked.
         mockMvc.perform(get("/bidList/delete/{id}", id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bidList/list"));
 
-        verify(service).delete(id);  // Vérifie que la méthode delete a été appelée
+        verify(service).delete(id);
     }
 
 
 
-    // 6.2 Test de deleteBid avec ID inconnu : redirection vers /error
+
     @Test
     public void deleteBid_WithUnknownId_ShouldReturn302AndRedirectToErrorPage() throws Exception {
 
-        // Given : suppression échoue car ID inconnu
+        // Given : Deletion fails because ID is unknown
         Integer unknownId = 999;
         BDDMockito.willThrow(new IllegalArgumentException("BidList not found")).given(service).delete(unknownId);
 
-        // When / Then : redirection vers /error
+        // When / Then : redirect to /error
         mockMvc.perform(get("/bidList/delete/{id}", unknownId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));

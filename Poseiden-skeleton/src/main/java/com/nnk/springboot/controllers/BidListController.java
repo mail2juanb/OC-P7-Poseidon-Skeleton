@@ -40,8 +40,8 @@ public class BidListController {
      */
     @RequestMapping("/list")
     public String home(Model model) {
+
         final List<BidList> bidLists = service.getAll();
-        log.debug("List of BidList found : {}", bidLists);
         model.addAttribute("bidLists", bidLists);
 
         return "bidList/list";
@@ -71,15 +71,6 @@ public class BidListController {
     @PostMapping("/validate")
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
 
-        // NOTE: check data valid and save to db, after saving return bid list
-        // Check Account            = @NotBlank / @Size(max = 30)
-        // Check Type               = @NotBlank / @Size(max = 30)
-        // Check Buy Quantity       =
-
-        log.debug("BidList account = {}", bid.getAccount());
-        log.debug("BidList type = {}", bid.getType());
-        log.debug("BidList Bid Quantity = {}", bid.getBidQuantity());
-
         if (hasValidationErrors(bid, result, model)) {
             return "bidList/add";
         }
@@ -102,7 +93,6 @@ public class BidListController {
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
         final BidList bidList = service.getById(id);
-        log.debug("BidList with id {} = {}", id, bidList);
         model.addAttribute("bidList", bidList);
 
         return "bidList/update";
@@ -123,17 +113,12 @@ public class BidListController {
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                              BindingResult result, Model model) {
 
-        // NOTE: check required fields, if valid call service to update Bid and return list Bid
-        // Check Account            = @NotBlank / @Size(max = 30)
-        // Check Type               = @NotBlank / @Size(max = 30)
-        // Check Bid Quantity       = none
-
         if (hasValidationErrors(bidList, result, model)) {
             return "bidList/update";
         }
 
         service.update(bidList);
-        log.debug("Update BidList with id {} = {}", id, bidList);
+
         return "redirect:/bidList/list";
 
     }
@@ -149,7 +134,6 @@ public class BidListController {
     @GetMapping("/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
 
-        log.info("Delete bidList with id {}", id);
         service.delete(id);
 
         return "redirect:/bidList/list";
@@ -168,7 +152,6 @@ public class BidListController {
     private boolean hasValidationErrors(BidList bidList, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
-            log.error("Validation errors in {} : {}", getClass().getSimpleName(), result.getAllErrors());
             model.addAttribute("bidList", bidList);
             return true;
         }

@@ -26,7 +26,6 @@ public class ErrorController {
      */
     @GetMapping("/403")
     public String error403(Model model) {
-        log.debug("GET ERROR_403 PAGE VIEW");
         model.addAttribute("errorMsg", "You are not authorized to access this page.");
         return "403";
     }

@@ -30,7 +30,6 @@ public class HomeController {
 	@RequestMapping("/")
 	public String toHome(Model model)
 	{
-		log.debug("GET / TO HOME PAGE VIEW");
 		return "home";
 	}
 
@@ -47,7 +46,6 @@ public class HomeController {
 	@RequestMapping("/home")
 	public String home(Model model)
 	{
-		log.debug("GET HOME PAGE VIEW");
 		return "home";
 	}
 

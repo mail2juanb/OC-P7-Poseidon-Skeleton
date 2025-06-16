@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @DataJpaTest
-// We dont want the H2 in-memory database
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class RuleNameRepositoryTest {
 

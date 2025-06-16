@@ -8,6 +8,7 @@ public class RuleNameDomainTest {
 
     @Test
     void update_shouldUpdateFieldsFromGivenRuleName() {
+
         // Given an original RuleName
         RuleName original = new RuleName();
         original.setId(1);
@@ -20,7 +21,7 @@ public class RuleNameDomainTest {
 
         // And a RuleName with updated values
         RuleName updated = new RuleName();
-        updated.setId(2);
+        updated.setId(1);
         updated.setName("Rule B");
         updated.setDescription("Description B");
         updated.setJson("new json String");
@@ -32,7 +33,7 @@ public class RuleNameDomainTest {
         original.update(updated);
 
         // Then all fields should be updated
-        //assertEquals(updated.getId(), original.getId());
+        assertEquals(updated.getId(), original.getId());
         assertEquals(updated.getName(), original.getName());
         assertEquals(updated.getDescription(), original.getDescription());
         assertEquals(updated.getJson(), original.getJson());

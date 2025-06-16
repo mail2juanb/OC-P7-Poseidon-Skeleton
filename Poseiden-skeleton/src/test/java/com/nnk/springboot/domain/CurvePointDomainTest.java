@@ -8,6 +8,7 @@ public class CurvePointDomainTest {
 
     @Test
     void update_shouldUpdateFieldsFromGivenCurvePoint() {
+
         // Given an existing CurvePoint
         CurvePoint curvePoint = new CurvePoint();
         curvePoint.setId(1);
@@ -17,7 +18,7 @@ public class CurvePointDomainTest {
 
         // And a CurvePoint with new values
         CurvePoint updated = new CurvePoint();
-        updated.setId(2);
+        updated.setId(1);
         updated.setCurveId(20);
         updated.setTerm(10.0);
         updated.setValue(200.0);
@@ -26,7 +27,7 @@ public class CurvePointDomainTest {
         curvePoint.update(updated);
 
         // Then only the expected fields are updated
-        //assertEquals(updated.getId(), curvePoint.getId());
+        assertEquals(updated.getId(), curvePoint.getId());
         assertEquals(updated.getCurveId(), curvePoint.getCurveId());
         assertEquals(updated.getTerm(), curvePoint.getTerm());
         assertEquals(updated.getValue(), curvePoint.getValue());

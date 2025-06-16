@@ -39,7 +39,6 @@ public class LoginController {
     public String login(Model model) {
 
         model.addAttribute("user", new User());
-        log.debug("GET PAGE LOGIN VIEW");
 
         return "login";
     }

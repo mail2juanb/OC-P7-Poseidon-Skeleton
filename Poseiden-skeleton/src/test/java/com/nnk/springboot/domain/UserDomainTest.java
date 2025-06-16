@@ -8,6 +8,8 @@ public class UserDomainTest {
 
     @Test
     void update_shouldUpdateFullnamePasswordAndRole() {
+
+        // Given: two User instances, one original and one with updated values
         User original = new User();
         original.setUsername("johndoe");
         original.setPassword("Password12345!");
@@ -20,10 +22,10 @@ public class UserDomainTest {
         updated.setFullname("John Updated");
         updated.setRole("ADMIN");
 
-        // Act
+        // When: the original user is updated with the new user's values
         original.update(updated);
 
-        // Assert
+        // Then: the original user's password, fullname, and role should be updated but the username should remain unchanged
         assertEquals("John Updated", original.getFullname());
         assertEquals("NewPass!2024", original.getPassword());
         assertEquals("ADMIN", original.getRole());

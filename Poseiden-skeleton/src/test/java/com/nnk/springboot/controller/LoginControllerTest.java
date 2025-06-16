@@ -28,53 +28,52 @@ public class LoginControllerTest {
 
 
 
-    // Given a login request, when the login page is accessed, then it should return the correct view name.
     @Test
     public void loginView() {
 
-        // Given
+        // Given a login request
         User user = new User(); // Un utilisateur de base
         when(model.addAttribute("user", user)).thenReturn(null);
 
-        // When
+        // When the login page is accessed
         String viewName = loginController.login(model);
 
-        // Then
-        assertThat(viewName).isEqualTo("login"); // Vérifie que le nom de la vue est "login"
-        verify(model).addAttribute("user", new User()); // Vérifie que l'attribut "user" a bien été ajouté au modèle
+        // Then it should return the correct view name
+        assertThat(viewName).isEqualTo("login");
+        verify(model).addAttribute("user", new User());
     }
 
 
 
 
-    // Given a request to login, when the login page is accessed, then the "user" model attribute should be set.
+
     @Test
     public void loginModelAttribute() {
 
-        // Given
+        // Given a request to login
         User expectedUser = new User(); // L'objet user attendu
 
-        // When
+        // When the login page is accessed
         loginController.login(model);
 
-        // Then
-        verify(model).addAttribute("user", expectedUser); // Vérifie que l'attribut "user" a été ajouté
+        // Then the "user" model attribute should be set
+        verify(model).addAttribute("user", expectedUser);
     }
 
 
 
 
-     //Test to ensure no interaction with UserRepository, since it's not used in the current method.
+
     @Test
     public void noInteractionWithUserRepository() {
 
-        // Given
+        // Given a user
         User user = new User();
 
-        // When
+        // When the login page is accessed
         loginController.login(model);
 
-        // Then
+        // Then ensure no interaction with UserRepository
         verify(userRepository, never()).findAll(); // Aucun appel au repository
     }
 

@@ -1,4 +1,3 @@
---// TODO : At the end - supprimer les DROP TABLE pour conserver les données
 DROP TABLE IF EXISTS BidList;
 DROP TABLE IF EXISTS Trade;
 DROP TABLE IF EXISTS CurvePoint;

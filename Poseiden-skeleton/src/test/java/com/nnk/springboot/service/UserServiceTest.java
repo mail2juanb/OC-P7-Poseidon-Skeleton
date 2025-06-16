@@ -44,61 +44,69 @@ public class UserServiceTest {
 
     @Test
     public void getAllUsers_ShouldReturnList() {
-        // Arrange
+
+        // Given: A list of users exists in the repository
         List<User> users = List.of(user);
         when(userRepository.findAll()).thenReturn(users);
 
-        // Act
+        // When: Retrieving all users
         List<User> result = userService.getAll();
 
-        // Assert
+        // Then: The result should contain the expected user
         assertEquals(1, result.size());
         assertEquals("testUser", result.get(0).getUsername());
         verify(userRepository).findAll();
+
     }
 
 
     @Test
-    public void createUser() {
-        // Arrange : on prépare le mock pour save()
+    public void createUser_ShouldCreateUser() {
+
+        // Given: A new user with no ID to be saved
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        // Act : appel de la méthode create() du service
+        // When: Creating the user
         userService.create(user);
 
-        // Assert : on vérifie que save() a bien été appelé
+        // Then: The repository should save the user
         verify(userRepository).save(user);
+
     }
 
 
 
     @Test
     public void createUser_ShouldThrowException_WhenIdIsNotNull() {
-        // Arrange
+
+        // Given: A user with a non-null ID
         user.setId(1);
 
-        // Act & Assert
+        // When + Then: Creating the user should throw NotFoundIdException
         NotFoundIdException exception = assertThrows(NotFoundIdException.class, () -> userService.create(user));
         assertTrue(exception.getMessage().contains("id set to 1"));
+
     }
 
 
 
     @Test
     public void createUser_ShouldThrowException_WhenIdLimitIsReached() {
-        // Arrange
+        // Given: The repository contains the maximum allowed number of users
         when(userRepository.count()).thenReturn(127L); // limite atteinte
 
-        // Act & Assert
+        // When + Then: Creating the user should throw IdLimitReachedException
         IdLimitReachedException exception = assertThrows(IdLimitReachedException.class, () -> userService.create(user));
         assertTrue(exception.getMessage().contains("Maximum number of entries"));
+
     }
 
 
 
     @Test
     public void updateUser() {
-        // Arrange : on crée un utilisateur avec un id
+
+        // Given: An existing user with ID 1
         User existingUser = new User();
         existingUser.setId(1);
         existingUser.setUsername("oldUsername");
@@ -106,45 +114,46 @@ public class UserServiceTest {
         existingUser.setFullname("Old User");
         existingUser.setRole("USER");
 
-        // Mock le findById pour retourner l'utilisateur existant
         when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
-        // Mock le save pour retourner l'utilisateur mis à jour
         when(userRepository.save(any(User.class))).thenReturn(existingUser);
 
-        // Mise à jour des informations de l'utilisateur
+        // And: New data to update the user
         existingUser.setUsername("newUsername");
         existingUser.setPassword("NewPassword1!");
         existingUser.setFullname("Updated User");
         existingUser.setRole("ADMIN");
 
-        // Act : appelle la méthode update()
+        // When: Updating the user
         userService.update(existingUser);
 
-        // Assert : Vérifie que save() a bien été appelée avec les bons paramètres
+        // Then: The repository should save the updated user
         verify(userRepository).save(existingUser);
-        // Vérifie que l'utilisateur a bien été mis à jour dans l'objet (ce n'est pas nécessaire mais peut être ajouté)
         assert existingUser.getUsername().equals("newUsername");
         assert existingUser.getPassword().equals("NewPassword1!");
         assert existingUser.getFullname().equals("Updated User");
+
     }
 
 
 
     @Test
     public void updateUser_ShouldThrowException_WhenIdNotFound() {
-        // Arrange
+
+        // Given: A user with ID 99 that does not exist
         user.setId(99);
         when(userRepository.findById(99)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // When + Then: Updating should throw NotFoundIdException
         assertThrows(NotFoundIdException.class, () -> userService.update(user));
+
     }
 
 
 
     @Test
-    public void deleteUser() {
-        // Arrange : Créer un utilisateur existant
+    public void deleteUser_ShouldDeleteUser() {
+
+        // Given: A user with ID 1 exists in the repository
         User existingUser = new User();
         existingUser.setId(1);
         existingUser.setUsername("usernameToDelete");
@@ -152,32 +161,35 @@ public class UserServiceTest {
         existingUser.setFullname("User To Delete");
         existingUser.setRole("USER");
 
-        // Mock de existsById pour retourner true, indiquant que l'utilisateur existe
         when(userRepository.existsById(1)).thenReturn(true);
 
-        // Act : Appeler la méthode delete()
-        userService.delete(1);  // L'id est 1, ce qui correspond à l'utilisateur à supprimer
+        // When: Deleting the user by ID
+        userService.delete(1);
 
-        // Assert : Vérifie que deleteById() a bien été appelée avec l'id de l'utilisateur
-        verify(userRepository).deleteById(1);  // Vérifie que le delete a bien été effectué
+        // Then: The repository should delete the user
+        verify(userRepository).deleteById(1);
+
     }
 
 
 
     @Test
     public void deleteUser_ShouldThrowException_WhenIdNotFound() {
-        // Arrange
+
+        // Given: No user exists with ID 99
         when(userRepository.existsById(99)).thenReturn(false);
 
-        // Act & Assert
+        // When + Then: Deleting should throw NotFoundIdException
         assertThrows(NotFoundIdException.class, () -> userService.delete(99));
+
     }
 
 
 
     @Test
     public void findById_ReturnsUser_WhenUserExists() {
-        // Arrange : Créer un utilisateur existant
+
+        // Given: A user with ID 1 exists
         User existingUser = new User();
         existingUser.setId(1);
         existingUser.setUsername("username");
@@ -185,30 +197,32 @@ public class UserServiceTest {
         existingUser.setFullname("User FullName");
         existingUser.setRole("USER");
 
-        // Mock de findById pour retourner l'utilisateur existant
         when(userRepository.findById(1)).thenReturn(Optional.of(existingUser));
 
-        // Act : Appeler la méthode getById()
+        // When: Retrieving the user by ID
         User user = userService.getById(1);
 
-        // Assert : Vérifie que l'utilisateur retourné est le même que celui simulé
+        // Then: The returned user should match the existing user
         assertNotNull(user);
         assertEquals(1, user.getId());
         assertEquals("username", user.getUsername());
         assertEquals("User FullName", user.getFullname());
+
     }
 
 
 
     @Test
     public void findById_ThrowsNotFoundIdException_WhenUserDoesNotExist() {
-        // Arrange : Mock de findById pour retourner un Optional vide
+
+        // Given: No user exists with ID 1
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
-        // Act et Assert : Vérifie que l'exception NotFoundIdException est lancée
+        // When + Then: Retrieving the user should throw NotFoundIdException
         assertThrows(NotFoundIdException.class, () -> {
-            userService.getById(1);  // Essaye de récupérer un utilisateur inexistant
+            userService.getById(1);
         });
+
     }
 
 }

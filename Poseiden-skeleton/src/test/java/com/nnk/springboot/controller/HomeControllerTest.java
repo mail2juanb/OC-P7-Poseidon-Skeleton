@@ -22,34 +22,32 @@ public class HomeControllerTest {
 
 
 
-    // Given a request to the root URL ("/"), when the toHome method is called, then it should return the "home" view.
+
     @Test
     public void toHome() {
 
-        // Given
-        // Pas de préparation particulière nécessaire pour cette méthode
+        // Given a request to the root URL ("/")
 
-        // When
+        // When the toHome method is called
         String viewName = homeController.toHome(model);
 
-        // Then
-        assertThat(viewName).isEqualTo("home"); // Vérifie que la vue retournée est "home"
+        // Then it should return the "home" view
+        assertThat(viewName).isEqualTo("home");
     }
 
 
 
-    // Given a request to the "/home" URL, when the home method is called,then it should return the "home" view.
+
     @Test
     public void home() {
 
-        // Given
-        // Pas de préparation particulière nécessaire pour cette méthode
+        // Given a request to the "/home" URL
 
-        // When
+        // When the home method is called
         String viewName = homeController.home(model);
 
-        // Then
-        assertThat(viewName).isEqualTo("home"); // Vérifie que la vue retournée est "home"
+        // Then it should return the "home" view
+        assertThat(viewName).isEqualTo("home");
     }
 
 }

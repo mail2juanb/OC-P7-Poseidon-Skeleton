@@ -37,11 +37,11 @@ public class CurvePointControllerTest {
 
 
 
-    // 1. Test de la méthode home : récupérer et afficher la liste des CurvePoints
+
     @Test
     public void home_ShouldReturn200AndCurvePointListView() throws Exception {
 
-        // Given : une liste de CurvePoints simulée renvoyée par le service
+        // Given : a simulated CurvePoints list returned by the service
         CurvePoint cp1 = new CurvePoint();
         cp1.setId(1);
         cp1.setCurveId(10);
@@ -58,8 +58,8 @@ public class CurvePointControllerTest {
 
         BDDMockito.given(service.getAll()).willReturn(list);
 
-        // When : on effectue une requête GET sur /curvePoint/list
-        // Then : la vue "curvePoint/list" est retournée avec une liste contenant 2 éléments
+        // When: a GET request is made to /curvePoint/list
+        // Then: the “curvePoint/list” view is returned with a list containing 2 items
         mockMvc.perform(get("/curvePoint/list"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/list"))
@@ -68,13 +68,13 @@ public class CurvePointControllerTest {
 
 
 
-    // 2. Test de la méthode addCurvePointForm : afficher le formulaire d'ajout de CurvePoint
+
     @Test
     public void addCurvePointForm_ShouldReturn200AndAddView() throws Exception {
 
-        // Given : l'utilisateur souhaite ajouter un nouveau CurvePoint
-        // When : on effectue une requête GET sur /curvePoint/add
-        // Then : la vue "curvePoint/add" est retournée avec un formulaire vide
+        // Given: the user wants to add a new CurvePoint
+        // When: a GET request is made to /curvePoint/add
+        // Then: the “curvePoint/add” view is returned with an empty form
         mockMvc.perform(get("/curvePoint/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/add"));
@@ -82,12 +82,12 @@ public class CurvePointControllerTest {
 
 
 
-    // 3. Test de la méthode validate : soumettre un formulaire valide pour ajouter un CurvePoint
+
     @Test
     public void validate_ShouldReturn302AndRedirectToList() throws Exception {
-        // Given : un formulaire avec des données valides pour un CurvePoint
-        // When : on effectue une requête POST sur /curvePoint/validate
-        // Then : la requête redirige vers la page de liste des CurvePoints
+        // Given: a form with valid data for a CurvePoint
+        // When: a POST request is made to /curvePoint/validate
+        // Then: the request redirects to the CurvePoints list page
         mockMvc.perform(post("/curvePoint/validate")
                         .param("curveId", "1")
                         .param("term", "2.0")
@@ -95,20 +95,20 @@ public class CurvePointControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/curvePoint/list"));
 
-        verify(service).create(any(CurvePoint.class)); // Vérifie que la création a été effectuée
+        verify(service).create(any(CurvePoint.class));
     }
 
 
 
-    // 4. Test de la méthode validate : soumettre un formulaire invalide pour ajouter un CurvePoint
+
     @Test
     public void validate_WithValidationError_ShouldReturn200AndAddView() throws Exception {
 
-        // Given : un formulaire avec un champ "curveId" vide
-        // When : on effectue une requête POST sur /curvePoint/validate avec des données invalides
-        // Then : la vue "curvePoint/add" est retournée avec une erreur sur le champ "curveId"
+        // Given: a form with an empty “curveId” field
+        // When: a POST request is made to /curvePoint/validate with invalid data
+        // Then: the “curvePoint/add” view is returned with an error on the “curveId” field
         mockMvc.perform(post("/curvePoint/validate")
-                        .param("curveId", "")  // champ vide = erreur de validation
+                        .param("curveId", "")
                         .param("term", "2.0")
                         .param("value", "3.0"))
                 .andExpect(status().isOk())
@@ -118,11 +118,11 @@ public class CurvePointControllerTest {
 
 
 
-    // 5. Test de la méthode showUpdateForm : afficher le formulaire de mise à jour pour un CurvePoint existant
+
     @Test
     public void showUpdateForm_ShouldReturn200AndUpdateView() throws Exception {
 
-        // Given : un CurvePoint existant avec un ID valide
+        // Given : an existing CurvePoint with a valid ID
         Integer id = 1;
         CurvePoint cp = new CurvePoint();
         cp.setId(id);
@@ -132,8 +132,8 @@ public class CurvePointControllerTest {
 
         BDDMockito.given(service.getById(id)).willReturn(cp);
 
-        // When : on effectue une requête GET sur /curvePoint/update/{id} avec un ID valide
-        // Then : la vue "curvePoint/update" est retournée avec les données du CurvePoint à mettre à jour
+        // When: a GET request is made to /curvePoint/update/{id} with a valid ID
+        // Then: the “curvePoint/update” view is returned with the CurvePoint data to be updated
         mockMvc.perform(get("/curvePoint/update/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/update"))
@@ -142,16 +142,16 @@ public class CurvePointControllerTest {
 
 
 
-    // 6. Test de la méthode showUpdateForm : afficher une erreur si l'ID du CurvePoint est inconnu
+
     @Test
     public void showUpdateForm_WithUnknownId_ShouldRedirectToError() throws Exception {
 
-        // Given : un ID de CurvePoint inexistant
+        // Given : a CurvePoint ID that does not exist
         Integer id = 999;
         BDDMockito.given(service.getById(id)).willThrow(new IllegalArgumentException("Not found"));
 
-        // When : on effectue une requête GET sur /curvePoint/update/{id} avec un ID inconnu
-        // Then : la requête redirige vers la page d'erreur
+        // When: a GET request is made to /curvePoint/update/{id} with an unknown ID
+        // Then: the request redirects to the error page
         mockMvc.perform(get("/curvePoint/update/{id}", id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));
@@ -159,15 +159,15 @@ public class CurvePointControllerTest {
 
 
 
-    // 7. Test de la méthode update : soumettre un formulaire valide pour mettre à jour un CurvePoint
+
     @Test
     public void update_ShouldReturn302AndRedirectToList() throws Exception {
 
-        // Given : un formulaire valide pour mettre à jour un CurvePoint avec un ID
+        // Given: a valid form to update a CurvePoint with an ID
         Integer id = 1;
 
-        // When : on effectue une requête POST sur /curvePoint/update/{id} avec des données valides
-        // Then : la requête redirige vers la page de liste des CurvePoints
+        // When: a POST request is made to /curvePoint/update/{id} with valid data
+        // Then: the request redirects to the CurvePoints list page
         mockMvc.perform(post("/curvePoint/update/{id}", id)
                         .param("curveId", "1")
                         .param("term", "2.0")
@@ -175,22 +175,22 @@ public class CurvePointControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/curvePoint/list"));
 
-        verify(service).update(any(CurvePoint.class)); // Vérifie que la mise à jour a été effectuée
+        verify(service).update(any(CurvePoint.class));
     }
 
 
 
-    // 8. Test de la méthode update : soumettre un formulaire invalide pour mettre à jour un CurvePoint
+
     @Test
     public void update_WithValidationError_ShouldReturn200AndUpdateView() throws Exception {
 
-        // Given : un formulaire invalide pour mettre à jour un CurvePoint avec un champ "curveId" vide
+        // Given: an invalid form for updating a CurvePoint with an empty “curveId” field
         Integer id = 1;
 
-        // When : on effectue une requête POST sur /curvePoint/update/{id} avec des données invalides
-        // Then : la vue "curvePoint/update" est retournée avec une erreur sur le champ "curveId"
+        // When: a POST request is made to /curvePoint/update/{id} with invalid data
+        // Then: the “curvePoint/update” view is returned with an error on the “curveId” field
         mockMvc.perform(post("/curvePoint/update/{id}", id)
-                        .param("curveId", "")  // champ vide = erreur
+                        .param("curveId", "")
                         .param("term", "2.0")
                         .param("value", "3.0"))
                 .andExpect(status().isOk())
@@ -200,34 +200,34 @@ public class CurvePointControllerTest {
 
 
 
-    // 9. Test de la méthode delete : supprimer un CurvePoint existant
+
     @Test
     public void delete_ShouldReturn302AndRedirectToList() throws Exception {
 
-        // Given : un ID valide pour supprimer un CurvePoint
+        // Given: a valid ID to delete a CurvePoint
         Integer id = 1;
 
-        // When : on effectue une requête GET sur /curvePoint/delete/{id} pour supprimer le CurvePoint
-        // Then : la requête redirige vers la page de liste des CurvePoints
+        // When: a GET request is made to /curvePoint/delete/{id} to delete the CurvePoint.
+        // Then: the request redirects to the CurvePoints list page.
         mockMvc.perform(get("/curvePoint/delete/{id}", id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/curvePoint/list"));
 
-        verify(service).delete(id); // Vérifie que la suppression a été effectuée
+        verify(service).delete(id);
     }
 
 
 
-    // 10. Test de la méthode delete : tenter de supprimer un CurvePoint inexistant
+
     @Test
     public void delete_WithUnknownId_ShouldRedirectToError() throws Exception {
 
-        // Given : un ID de CurvePoint inexistant
+        // Given : a non-existent CurvePoint ID
         Integer unknownId = 999;
         BDDMockito.willThrow(new IllegalArgumentException("Not found")).given(service).delete(unknownId);
 
-        // When : on effectue une requête GET sur /curvePoint/delete/{id} pour supprimer un CurvePoint inexistant
-        // Then : la requête redirige vers la page d'erreur
+        // When: a GET request is made to /curvePoint/delete/{id} to delete a non-existent CurvePoint
+        // Then: the request redirects to the error page
         mockMvc.perform(get("/curvePoint/delete/{id}", unknownId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/error"));

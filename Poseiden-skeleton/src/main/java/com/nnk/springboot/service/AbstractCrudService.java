@@ -88,7 +88,6 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
         if (count >= MAX_TINYINT_ID) {
             throw new IdLimitReachedException("Maximum number of entries (" + MAX_TINYINT_ID + ") reached. Cannot insert new one.");
         }
-        log.debug("CREATE = {}", model);
         repository.save(model);
     }
 
@@ -105,7 +104,6 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
     public void update(MODEL model){
         MODEL updatedModel = getById(model.getId())
                 .update(model);
-        log.debug("UPDATE = {}", model);
         repository.save(updatedModel);
     }
 
@@ -121,7 +119,6 @@ public abstract class AbstractCrudService<MODEL extends DomainModel<MODEL>> impl
         if (!repository.existsById(id)) {
             throw new NotFoundIdException("This id doesn't exist : " + id);
         }
-        log.debug("DELETE = {}", id);
         repository.deleteById(id);
     }
 

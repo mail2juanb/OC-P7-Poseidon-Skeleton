@@ -20,9 +20,7 @@ public class CurvePointServiceTest extends AbstractCrudServiceTest<CurvePoint> {
     @Override
     protected AbstractCrudService<CurvePoint> initService() {
         this.repository = curvePointRepository;
-
         return new CurvePointServiceImpl(curvePointRepository);
-
     }
 
 
@@ -31,9 +29,7 @@ public class CurvePointServiceTest extends AbstractCrudServiceTest<CurvePoint> {
     protected CurvePoint createModelWithId(int id) {
         CurvePoint curvePoint = mock(CurvePoint.class);
         lenient().when(curvePoint.getId()).thenReturn(id);
-
         return curvePoint;
-
     }
 
 
@@ -43,9 +39,7 @@ public class CurvePointServiceTest extends AbstractCrudServiceTest<CurvePoint> {
         CurvePoint curvePoint = new CurvePoint();
         curvePoint.setId(null);
         curvePoint.setTerm(123.123);
-
         return curvePoint;
-
     }
 
 
@@ -53,7 +47,6 @@ public class CurvePointServiceTest extends AbstractCrudServiceTest<CurvePoint> {
     @Override
     protected CurvePoint createUpdatedModel() {
         return mock(CurvePoint.class);
-
     }
 
 }
