@@ -74,14 +74,12 @@ public class CurvePoint implements DomainModel<CurvePoint> {
     /**
      * Updates the current {@link CurvePoint} instance with selected fields from another instance.
      *
-     * <p>
-     * The following fields are updated:
+     * <p>The following fields are updated:</p>
      * <ul>
      *     <li>{@code curveId}</li>
      *     <li>{@code term}</li>
      *     <li>{@code value}</li>
      * </ul>
-     * </p>
      *
      * @param curvePoint the {@link CurvePoint} instance containing the new data
      * @return the updated {@link CurvePoint} instance

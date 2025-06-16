@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * <h3>Overview</h3>
  * <p>This application uses Spring Boot, Spring Security, Thymeleaf, and a MySQL database (H2 for testing).</p>
- * <p>Key features:</p>
+ * <p>Key features include:</p>
  * <ul>
  *   <li>Full CRUD on main entities</li>
  *   <li>Authentication system with Spring Security</li>
@@ -26,6 +26,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application {
 
+    /**
+     * Main method which serves as the entry point for the Spring Boot application.
+     *
+     * @param args Command-line arguments passed to the application.
+     */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

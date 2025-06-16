@@ -198,14 +198,12 @@ public class BidList implements DomainModel<BidList> {
     /**
      * Updates the current bid list with selected fields from the provided instance.
      *
-     * <p>
-     * Only the following fields are updated:
+     * <p>Only the following fields are updated:</p>
      * <ul>
      *     <li>{@code account}</li>
      *     <li>{@code type}</li>
      *     <li>{@code bidQuantity}</li>
      * </ul>
-     * </p>
      *
      * @param bidList the source {@link BidList} object to update from
      * @return the updated {@link BidList} instance
